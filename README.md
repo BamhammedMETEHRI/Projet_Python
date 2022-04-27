@@ -1,4 +1,4 @@
-## Ce Readme est une brouillon pour tous ce qu'on va faire en détail
+## Ce Readme est un brouillon pour tous ce qu'on va faire en détail
 L'avancement technique :
 
 Le jeu est actuellement au stade démo
