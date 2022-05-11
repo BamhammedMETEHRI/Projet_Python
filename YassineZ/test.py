@@ -20,8 +20,26 @@ def clear():
   
 
 bob = Dresseur_Class.Joueur("Yassine",[])
+mur= Fore.BLACK+"#"+Style.RESET_ALL
+Herbe_All = Fore.GREEN+"~"+Style.RESET_ALL
+rien = " "
 
 Pokemon_Class.Aficher_Matrice_Des_Type()
+map_Deux =[
+    [mur*12],                       #1
+    [mur,Herbe_All*5,rien*5,mur],   #2
+    [mur,Herbe_All*5,rien*5,mur],   #3
+    [mur,Herbe_All*5,rien*5,mur],   #4
+    [mur,Herbe_All*5,rien*5,mur],   #5
+    [mur,Herbe_All*5,rien*5,mur],   #6
+    [mur,Herbe_All*5,rien*5,mur],   #7
+    [mur,Herbe_All*5,rien*5,mur],   #8
+    [mur,Herbe_All*5,rien*5,mur],   #9
+    [mur,Herbe_All*5,rien*5,mur],   #10
+    [mur,Herbe_All*5,rien*5,mur],   #11
+    [mur*12]                        #12
+    ]
+
 map = [
     [Fore.BLACK+"#","#","#","#","#","#","#","#","#","#","#","#"+Style.RESET_ALL],#1
     [Fore.BLACK+"#"+Style.RESET_ALL,Fore.GREEN+"~","~","~","~","~"+Style.RESET_ALL," "," "," "," "," ",Fore.BLACK+"#"+Style.RESET_ALL],#2
@@ -37,25 +55,25 @@ map = [
     [Fore.BLACK+"#","#","#","#","#","#","#","#","#","#","#","#"+Style.RESET_ALL] #12
     ]
 print()
-def afficher_map():
-    for i in map:
+def afficher_map(world):
+    for i in world:
         for j in i:
             print(j,end="")
         print()
-afficher_map()
+afficher_map(map_Deux)
 
 def test(Joueur):#10 1 
     print(Joueur.physique)
     avant = map[10][1]
     print(avant)
     map[10][1] = Fore.GREEN+Joueur.physique
-    afficher_map()
+    afficher_map(map)
     map[10][1] = avant
     avant = map[10][2]
     map[10][2] = Joueur.physique
-    afficher_map()
+    afficher_map(map)
 #test(bob)
-def Bouger(Joueur):
+def Bouger_anciene_map(Joueur):
     x = 1
     y = 10
     avant =map[y][x]
@@ -65,7 +83,7 @@ def Bouger(Joueur):
         map[y][x] =Joueur.physique+Style.RESET_ALL
     else:
         map[y][x]=Joueur.physique
-    afficher_map()
+    afficher_map(map)
     while (avant!=(Fore.BLUE+"<"+Style.RESET_ALL)):
         deplacer=input(
             "  "+Fore.LIGHTBLUE_EX+"Z"+Style.RESET_ALL+"  \n"+Fore.LIGHTGREEN_EX+"Q"+Style.RESET_ALL+" "+Fore.LIGHTMAGENTA_EX+"S"+Style.RESET_ALL+" "+Fore.LIGHTYELLOW_EX+"D"+Style.RESET_ALL+"\n"+Fore.LIGHTBLUE_EX+"Z haut"+Style.RESET_ALL+", "+Fore.LIGHTGREEN_EX+"Q a gauche"+Style.RESET_ALL+", "+Fore.LIGHTMAGENTA_EX+"S en bas "+Style.RESET_ALL+"et "+Fore.LIGHTYELLOW_EX+"D a droite "+Style.RESET_ALL+": ")
@@ -113,10 +131,38 @@ def Bouger(Joueur):
             map[y][x]=Fore.BLUE+Joueur.physique+Style.RESET_ALL
         else:
             map[y][x]=Joueur.physique
-        afficher_map()
+        afficher_map(map)
 
+# def bouger(Joueur):
 
-        
+#Bouger(bob)
+# print("salut")
+# print(type(bob)== Dresseur_Class.Joueur)
 
-        
-Bouger(bob)
+#                    _M___M_
+#                   /       \
+#                  /  \   /  \
+#     _M____M_    /  °     °  \
+#    /²²¨¨¨¨²²\  /      V      \
+#   /²²¨¨¨¨¨¨²²\/     WWWWW     \
+#  /²²¨¨¨¨¨¨¨¨²²\
+# /²²¨¨¨¨¨¨¨¨¨¨²²\
+#                    _M___M_
+#                   /       \
+#                  /  _     _\
+#     _M____M_    /  °     °  \
+#    /²²¨¨¨¨²²\  /      U      \
+#   /²²¨¨¨¨¨¨²²\/     -----     \
+#  /²²¨¨¨¨¨¨¨¨²²\
+# /²²¨¨¨¨¨¨¨¨¨¨²²\
+#                    _M___M_
+#                   /       \
+#                  / /     \ \
+#     _M____M_    /  O    O   \
+#    /²²¨¨¨¨²²\  /      -      \
+#   /²²¨¨¨¨¨¨²²\/     ~~~~~~    \
+#  /²²¨¨¨¨¨¨¨¨²²\
+# /²²¨¨¨¨¨¨¨¨¨¨²²\
+clear()
+s = [Fore.BLUE+"<"+Style.RESET_ALL,">"+Style.RESET_ALL,"V","^"+Style.RESET_ALL]
+print(s[1])

@@ -105,3 +105,5 @@ class Pokemon:
         self.Exp=0
         self.dialogue = self.Espece + self.Espece + self.Espece +" !!!"
         self.sauvage = sauvage  #bool True = il est sauvage , False = il est capturè
+
+#crée une liste avec plein plein de pokémon

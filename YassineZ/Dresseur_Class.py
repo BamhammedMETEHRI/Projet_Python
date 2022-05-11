@@ -35,7 +35,7 @@ class Joueur(Dresseur):
 
     def __init__(self, name, team):
         self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son equipe
-        super().__init__(name, team,'H')# il sera en H pour Hero
+        super().__init__(name, team,Fore.BLACK+'H'+Style.RESET_ALL)# il sera en H pour Hero
         
     #------------------------------------------------------------------
     def afficher(self):
