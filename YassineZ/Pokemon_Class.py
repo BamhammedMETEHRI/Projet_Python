@@ -1,3 +1,15 @@
+import colorama
+from colorama import Fore
+from colorama import Style
+
+colorama.init()
+print(Fore.BLUE + Style.BRIGHT + "This is the color of the sky" + Style.RESET_ALL)
+print(Fore.GREEN + "This is the color of grass" + Style.RESET_ALL)
+print(Fore.BLUE + Style.DIM + "This is a dimmer version of the sky" + Style.RESET_ALL)
+print(Fore.YELLOW + "This is the color of the sun" + Style.RESET_ALL)
+print(len(Fore.YELLOW+Style.RESET_ALL))
+print(len(Fore.BLUE+Style.RESET_ALL))
+print(len(Fore.BLUE + Style.DIM +Style.RESET_ALL))
 #La classe des pokèmon 
 Efficace = 2
 
@@ -37,14 +49,28 @@ def Aficher_Matrice_Des_Type():
             if i == 0 and j == 0 :
                 m+= "|         "#10
             else:
-                if j == 0:
-                    p ="|"+str(Matrice_Des_Type[i][j])
-                    while len(p) <10:
+                if j == 0 and i!=0:
+                    p ="|"+str(Fore.BLUE + Style.BRIGHT+Matrice_Des_Type[i][j]+Style.RESET_ALL)
+                    while len(p) <10+len(Fore.BLUE + Style.BRIGHT+Style.RESET_ALL):#j'ai du madapter pour les couleurs
                         p +=" "
                 else :
-                    
-                    p ="|"+str(Matrice_Des_Type[i][j])
-                    while len(p)<= len(Matrice_Des_Type[0][j]):
+                    t = Matrice_Des_Type[i][j]
+                    k=0
+                    if type(t)==str :
+                        p="|"+Fore.YELLOW+t+Style.RESET_ALL
+                    elif t==0.5:
+                        p="|"+Fore.RED+str(t)+Style.RESET_ALL
+                        k= len(Fore.RED+Style.RESET_ALL)
+                    elif t== 2 :
+                        p="|"+Fore.GREEN+str(t)+Style.RESET_ALL
+                        k= len(Fore.GREEN+Style.RESET_ALL)
+                    elif t == 0:
+                        p="|"+Fore.BLACK+str(t)+Style.RESET_ALL
+                        k= len(Fore.BLACK+Style.RESET_ALL)
+                    else:
+                        p="|"+Fore.BLUE+str(t)+Style.RESET_ALL
+                        k= len(Fore.BLUE+Style.RESET_ALL)
+                    while len(p)<= len(Matrice_Des_Type[0][j])+k:
                         p+= " "
                 m += p
         L+= m + "\n"
@@ -53,9 +79,29 @@ def Aficher_Matrice_Des_Type():
 #Aficher_Matrice_Des_Type()
 
 class Pokemon:
-    def __init__(self,name,Type,attack,state,sauvage) :
-        self.name = name#nom
-        self.type= Type#peut avoir 2 ou 1 type
-        self.attack= attack#peut entre 1 et avoir max 4 attack et chaque attack à un nombre de pp et un type
-        self.state = state#un dico de ces stat | HP| attack | attack spe | def | def spe | NIV |IV | Taux de capture
-        self.sauvage = sauvage#bool True = il est sauvage , False = il est capturè
+    def __init__(self,name,Type,ability,sauvage,HP_full,Attack_full,Def_full,AttackSPE_full,DefenseSPE_full,Speed_full,Taux_De_Capture) :
+        self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut paschanger ....
+        self.Espece = name              #...l'espece du Pokemon fix qui est fixe 
+        self.type= Type                 #peut avoir 2 ou 1 type [str]
+        self.compétence= ability             #peut entre 1 et avoir max 4 attack et chaque attack à un nombre de pp et un type [ataque]
+#state
+        self.HP_full = HP_full          #HP_MAX -> point de vie max
+        self.Attack_full = Attack_full  #Attack physique max
+        self.AttackSPE_full =AttackSPE_full
+        self.Defense_full = Def_full
+        self.DefenseSPE_full =DefenseSPE_full
+        self.Speed_full = Speed_full
+        self.HP=HP_full                 #HP actuel
+        self.Attack = Attack_full
+        self.Defense = Def_full
+        self.AttackSPE =AttackSPE_full
+        self.DefenseSPE = DefenseSPE_full
+        self.Speed = Speed_full
+#fin
+        self.Taux_De_Capture = Taux_De_Capture
+        self.Esquive = 1000
+        self.Precision = 1000
+        self.Level = 0
+        self.Exp=0
+        self.dialogue = self.Espece + self.Espece + self.Espece +" !!!"
+        self.sauvage = sauvage  #bool True = il est sauvage , False = il est capturè

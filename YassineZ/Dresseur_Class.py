@@ -1,15 +1,18 @@
 #crée la classe des dresseur toute les entité ( se sont des dresseur de pokèmon) non pokèmon 
+import colorama
+from colorama import Fore
+from colorama import Style
 import random
 
 from Item_Class import Item
 
-
+####### le parent de tout les pnj et joueur ##########################################################################################################
 class Dresseur:
     """
     La classe Dresseur sera le parent de tout les 
     Personage (sauf les Pokèmons) 
     """
-    def __init__(self,name,team):
+    def __init__(self,name,team,physique):
         """
         chaque personage aura
         un inventaire (potion et pokeball et autre peut etre)
@@ -17,11 +20,14 @@ class Dresseur:
         chaque personage aura une equipe de pokèmon
         et chaque personage aura de l'argent avec la quel on poura acheter des objet
         """
-        self.inventaire=[]
-        self.name=name
-        self.team= team
-        self.money=0
-
+        self.name=name      #nom du dresseur 
+        self.money=0        #l'argent que possède le dresseur
+        self.inventaire=[]  #les objet que possède le dresseur 
+        self.team= team     #l'equipe du dresseur qui sera une liste de 6
+        self.dialogue= ""   #chaque dresseur aura une boite de dialogue
+        self.physique = physique  #a quoi ressemblera le personnage sur la map
+        
+######### celui qui va jouer ########################################################################################################
 class Joueur(Dresseur):
     """
     ce si est la classe du joueur qui jouera
@@ -31,9 +37,10 @@ class Joueur(Dresseur):
         """
         Ordi = va ou tout les surplus de pokèmon
         """
-        self.PC_DU_JOUEUR = []
-        super().__init__(name, team)
-
+        self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son equipe
+        super().__init__(name, team,'H')# il sera en H pour Hero
+        
+    #------------------------------------------------------------------
     def afficher(self):
         """
         affiche tout les pokèmon que le joueur à attraper et 
@@ -41,7 +48,7 @@ class Joueur(Dresseur):
         """
         for i in range(len(self.PC_DU_JOUEUR)):
             print("id ",i,", nom ",self.Boite[i].name)
-
+    #------------------------------------------------------------------
     def ajouter_membre(self,membre):
         """
         La fonction qui permet de rajouter 
@@ -54,6 +61,7 @@ class Joueur(Dresseur):
             print("Votre equipe est complète votre pokèmon sera dans le PC")
             self.Ordi.append(membre)
 
+######## les joueur adverse##############################################################################################
 class PNJ_Adverse(Dresseur):
     """
     Se sont les ordi qui provoque des duel au Joueur
@@ -62,6 +70,7 @@ class PNJ_Adverse(Dresseur):
         super().__init__(name, team)
         self.money = random.randint(10,20)
 
+######## soigneur et vendeur #########################################################################################################
 class PNJ_Soigneur_Marchand(Dresseur):
     """
     Se sont des Pnj qui permet de soigné les pokémon du joueur et de vendre
@@ -70,14 +79,16 @@ class PNJ_Soigneur_Marchand(Dresseur):
     def __init__(self, name, team):
         super().__init__(name, team)
         self.inventaire=[Item("Potion",""),Item("Poké ball","pokeball")]
-
+    
+    #------------------------------------------------------------------
     def health(self,target):
         """
         fonction qui permet de soigner les pokemon de target
         """
         for i in target.team:
             i.HP = i.fullHP
-    
+    #------------------------------------------------------------------
+
     def comercer(self,target):
         """
         fonction qui permet de faire du comerce avec target
@@ -103,4 +114,4 @@ class PNJ_Soigneur_Marchand(Dresseur):
         else :
             print("Au revoir :)")
             return
-            
+    #------------------------------------------------------------------

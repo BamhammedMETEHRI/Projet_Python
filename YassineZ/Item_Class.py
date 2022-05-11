@@ -10,3 +10,4 @@ class Item:
             self.effect= "objet qui soigne les pokèmon"
             self.value = 10
             self.prix = 10
+    #------------------------------------------------------------------
