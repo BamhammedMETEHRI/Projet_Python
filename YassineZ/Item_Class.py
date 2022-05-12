@@ -1,4 +1,4 @@
-#La classe des itème son la class des objet
+#La classe des itème son la class des objet#
 class Item:
     def __init__(self,name,effect) :
         self.name=name

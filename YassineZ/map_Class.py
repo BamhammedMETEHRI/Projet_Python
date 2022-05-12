@@ -36,5 +36,5 @@ class Map:
             print()
 test = Map(10,10)
 test.show()
-test.append_biome(Herbe_All,0,0,1,1)
+test.append_biome(Herbe_All,0,0,5,7)
 test.show()

@@ -2,11 +2,11 @@ import pygame
 
 window_resolution = (640,480)
 launched = True
-#PK sa marche pas j'ai fais avec playaudio mais sa freez bruh
+#PK sa marche pas j'ai fais avec playaudio mais sa freez bruh 
 pygame.init()
 pygame.display.set_caption("Python - jouer du son")
 window_surface = pygame.display.set_mode(window_resolution)
-music = pygame.mixer.Sound('sample.wav')#mp3 sa marche pas
+music = pygame.mixer.Sound('music.wav')#mp3 sa marche pas
 """
 <sound>.play(loop = 0 , time = 0, fadein = 0)
     .stop()

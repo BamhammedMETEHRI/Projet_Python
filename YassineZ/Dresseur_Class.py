@@ -1,4 +1,4 @@
-#crée la classe des dresseur toute les entité ( se sont des dresseur de pokèmon) non pokèmon 
+#crée la classe des dresseur toute les entité ( se sont des dresseur de pokèmon) non pokèmon #
 import colorama
 from colorama import Fore
 from colorama import Style
