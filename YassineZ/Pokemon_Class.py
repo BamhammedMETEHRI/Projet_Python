@@ -2,15 +2,16 @@ import colorama
 from colorama import Fore
 from colorama import Style
 import Mouv_Class
+import random
 
-colorama.init()
-print(Fore.BLUE + Style.BRIGHT + "This is the color of the sky" + Style.RESET_ALL)
-print(Fore.GREEN + "This is the color of grass" + Style.RESET_ALL)
-print(Fore.BLUE + Style.DIM + "This is a dimmer version of the sky" + Style.RESET_ALL)
-print(Fore.YELLOW + "This is the color of the sun" + Style.RESET_ALL)
-print(len(Fore.YELLOW+Style.RESET_ALL))
-print(len(Fore.BLUE+Style.RESET_ALL))
-print(len(Fore.BLUE + Style.DIM +Style.RESET_ALL))
+# colorama.init()
+# print(Fore.BLUE + Style.BRIGHT + "This is the color of the sky" + Style.RESET_ALL)
+# print(Fore.GREEN + "This is the color of grass" + Style.RESET_ALL)
+# print(Fore.BLUE + Style.DIM + "This is a dimmer version of the sky" + Style.RESET_ALL)
+# print(Fore.YELLOW + "This is the color of the sun" + Style.RESET_ALL)
+# print(len(Fore.YELLOW+Style.RESET_ALL))
+# print(len(Fore.BLUE+Style.RESET_ALL))
+# print(len(Fore.BLUE + Style.DIM +Style.RESET_ALL))
 #La classe des pokèmon 
 Efficace = 2
 
@@ -87,6 +88,7 @@ def Calcule_Sate(Base,IV,EV,NIV):
         return State
 
 
+Liste_de_Pokemon = []
 #definir un pokemon il est composé de quoi comme variable 
 class Pokemon:
     def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture) :
@@ -139,10 +141,9 @@ class Pokemon:
         self.Precision = 100
         self.dialogue = self.Espece +" "+ self.Espece +" " + self.Espece +" !!!"
         self.sauvage = sauvage  #bool True = il est sauvage , False = il est capturè
-
-    def afficher_element(self):
-        All_Variable = {
-            "name":self.name,"Espece":self.Espece,"type":self.type,"competence":self.competence,"Niveau":self.Level,
+        Liste_de_Pokemon.append(self)
+        self.All_Variable = {
+            "name":self.name,"Espece":self.Espece,"type":self.type,"competence":self.competence,"Level":self.Level,"Experience":self.Exp,
             "State Base HP":self.State_Base_HP,"IV HP":self.IV_HP,"EV HP":self.EV_HP,"HP full":self.HP_full,"HP":self.HP,
             "State base Attack":self.State_Base_Attack,"IV Att":self.IV_Att,"EV Att":self.EV_Att,"Attack full":self.Attack_full,"Attack":self.Attack,
             "State base AttackSPE":self.State_Base_AttackSPE,"IV AttSPE":self.IV_AttSPE,"EV AttSPE":self.EV_AttSPE,"AttackSPE full":self.AttackSPE_full,"AttackSPE":self.AttackSPE,
@@ -151,49 +152,86 @@ class Pokemon:
             "State base Speed":self.State_Base_Speed,"IV Speed":self.IV_Speed,"EV Speed":self.EV_Speed,"Speed full":self.Speed_full,"Speed":self.Speed,
             "statu":self.statu,"Taux De Capture":self.Taux_De_Capture,"Esquive":self.Esquive,"Precision":self.Precision,"dialogue":self.dialogue,"sauvage":self.sauvage
         }
-        space = 16
-        tour=-1
-        debut=True
-        for i in All_Variable.keys():
-            if i == "State Base HP" or tour>=0:
-                if tour==-1:
-                    tour=6*5
+    def afficher_state(self):
+        debut=False
+        space=[len("State base AttackSPE "),len("IV AttSPE "),len("EV AttSPE "),len("AttackSPE full "),len("AttackSPE ")]
+        color=[Fore.GREEN,Fore.RED,Fore.LIGHTMAGENTA_EX,Fore.BLUE,Fore.CYAN,Fore.LIGHTWHITE_EX]
+        index_color =0
+        index_space=0
+        for i in self.All_Variable.keys():
+            if i=="State Base HP":
+                debut=True
                 
-                if tour%5==0:
-                    if not(debut):
-                        # if tour==30:
-                        #     print(Fore.BLUE,end="")
-                        # else:
-                        #     print(Fore.RED)
-                        print("")
-                        print("  EH dffgpb,prgbpojernj georbtepirzfnboeguOH")
-                        debut=False
-                    else:
-                        if tour!=0:
-                            print("")
-                            print("  |",i," : ",All_Variable[i],end="")
-                        else:
-                            print(" ")
-                        # print(Style.RESET_ALL)
-                        debut=True
-                        
-                else:
-                    print(" | ",i," : ",All_Variable[i],end=" ")
-                        
-                tour=tour-1
-            else:
+            if debut:
+                if i[0:5]=="State":
+                    print(Style.RESET_ALL)
+                    print(color[index_color])
+                    index_color +=1
+                print(i,end="")
+                for _ in range(space[index_space]-len(i)):
+                    print(" ",end="")
+                print(": ",self.All_Variable[i],end="")
+                for _ in range(6-len(str(self.All_Variable[i]))):
+                    print(" ",end="")
+                print(end="| ")
+                index_space+=1
+                if index_space==5:
+                    index_space=0
+            if i=="Speed":
+                print(Style.RESET_ALL)
+                return
+                
+
+    def afficher_element(self):#ameliorer la fonction
+        self.afficher_state()
+        space = 16
+        pause = True
+        for i in self.All_Variable.keys():  
+            if i=="State Base HP":
+                pause=False
+            if pause:  
                 print(i," :",end="")
                 for _ in range(space-len(i)):
-                    print(" ",end="")
+                        print(" ",end="")
                 if i == "competence":
-                    for j in range(len(All_Variable[i])):
-                        if j!=len(All_Variable[i])-1:
-                            print(j,". ",All_Variable[i][j].Name,end=" | ")
+                    for j in range(len(self.All_Variable[i])):#pour les compétence
+                        if j!=len(self.All_Variable[i])-1:
+                            print(j,". ",self.All_Variable[i][j].Name,end=" | ")
                         else:
-                            print(j,". ",All_Variable[i][j].Name)
+                            print(j,". ",self.All_Variable[i][j].Name)
                 else:
-                    print(All_Variable[i])
+                    print(self.All_Variable[i])
+            if i=="Speed":
+                pause = True
+            
+    def gain_Exp(self,EXP_Gagner):
+        if self.Level==100:
+            return
+        self.Exp += EXP_Gagner
+        while self.Exp >= self.Level*0.07:
+            a=self.Level
+            print("Votre Pokemon Monte de Niveau Felicitation ces state augmente de ",a," --> ",a+1," Niveau")
+            self.Level += 1
+            if self.Level==100 :
+                self.Level=100
+                self.Exp =0
+                print("Votre Pokemon qui s'apelle ",self.name," a atteint son niveaux max bravo !!!")
+                return
+            self.Exp -= a*0.07
+    def IV_Make(self):
+
+
 
 #crée une liste avec plein plein de pokémon#
+def afficher_Liste_Pokemon():
+    for i in range (len(Liste_de_Pokemon)):
+        print(i," : ",Liste_de_Pokemon[i].name)
 Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir
-Pikachu.afficher_element()
+print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
+Pikachu.gain_Exp(0.1)#faire une fonction qui fait la monter des Niveau
+print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
+#afficher_Liste_Pokemon()
+print()
+#FINIR IV ET EV 
+#PUIS finir les interaction avec la map
+#PUIS la fonction de Combat
