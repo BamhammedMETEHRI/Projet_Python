@@ -219,7 +219,7 @@ class Pokemon:
                 return
             self.Exp -= a*0.07
     def IV_Make(self):
-
+        pass
 
 
 #crée une liste avec plein plein de pokémon#
