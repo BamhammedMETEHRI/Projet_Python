@@ -7,7 +7,6 @@ from time import sleep
 from colorama import Fore
 from colorama import Style
 import Dresseur_Class, Pokemon_Class
-
 def clear():
   
     # for windows
@@ -135,7 +134,7 @@ def Bouger_anciene_map(Joueur):
 
 # def bouger(Joueur):
 
-Bouger_anciene_map(bob)
+#Bouger_anciene_map(bob)
 print("salut")
 print(type(bob)== Dresseur_Class.Joueur)
 
@@ -166,3 +165,18 @@ print(type(bob)== Dresseur_Class.Joueur)
 clear()
 s = [Fore.BLUE+"<"+Style.RESET_ALL,">"+Style.RESET_ALL,"V","^"+Style.RESET_ALL]
 print(s[1])
+clear()
+# print("N\{&#x25A0}")
+# print("■")
+inters=[' ','╴','╷', '┐','╶','─','┌','┬','╵','┘','│','┤','└','┴','├','┼']
+print(inters[6],inters[3])
+print(inters[12],inters[9])
+print()
+print(inters[6],inters[5],inters[3])
+print(inters[10],inters[0],inters[10])
+print(inters[12],inters[5],inters[9])
+print()
+print(inters[6],inters[7],inters[3])
+print(inters[14],inters[15],inters[11])
+print(inters[12],inters[13],inters[9])
+clear()

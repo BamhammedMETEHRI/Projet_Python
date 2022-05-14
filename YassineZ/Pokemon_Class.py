@@ -1,6 +1,7 @@
 import colorama
 from colorama import Fore
 from colorama import Style
+import Mouv_Class
 
 colorama.init()
 print(Fore.BLUE + Style.BRIGHT + "This is the color of the sky" + Style.RESET_ALL)
@@ -77,33 +78,122 @@ def Aficher_Matrice_Des_Type():
     print(L)
 
 #Aficher_Matrice_Des_Type()
+def Calcule_State_HP(Base,IV,EV,NIV):
+        PV = ((((2*Base+IV+(EV/4)))*NIV)/100)+NIV+10
+        return PV
+    
+def Calcule_Sate(Base,IV,EV,NIV):
+        State = ((2*Base+IV+(EV/4))*NIV)+5
+        return State
 
+
+#definir un pokemon il est composé de quoi comme variable 
 class Pokemon:
-    def __init__(self,name,Type,ability,sauvage,HP_full,Attack_full,Def_full,AttackSPE_full,DefenseSPE_full,Speed_full,Taux_De_Capture) :
+    def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture) :
         self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut paschanger ....
         self.Espece = name              #...l'espece du Pokemon fix qui est fixe 
         self.type= Type                 #peut avoir 2 ou 1 type [str]
-        self.compétence= ability             #peut entre 1 et avoir max 4 attack et chaque attack à un nombre de pp et un type [ataque]
-#state
-        self.HP_full = HP_full          #HP_MAX -> point de vie max
-        self.Attack_full = Attack_full  #Attack physique max
-        self.AttackSPE_full =AttackSPE_full
-        self.Defense_full = Def_full
-        self.DefenseSPE_full =DefenseSPE_full
-        self.Speed_full = Speed_full
-        self.HP=HP_full                 #HP actuel
-        self.Attack = Attack_full
-        self.Defense = Def_full
-        self.AttackSPE =AttackSPE_full
-        self.DefenseSPE = DefenseSPE_full
-        self.Speed = Speed_full
-#fin
-        self.Taux_De_Capture = Taux_De_Capture
-        self.Esquive = 1000
-        self.Precision = 1000
-        self.Level = 0
+        self.competence= competence        #peut entre 1 et avoir max 4 Mouv et chaque Mouv à un nombre de pp et un type [ataque]
+        self.Level = 1
         self.Exp=0
-        self.dialogue = self.Espece + self.Espece + self.Espece +" !!!"
+#Racine des state
+        self.State_Base_HP=State_Base_HP
+        self.State_Base_Attack=State_Base_Attack
+        self.State_Base_AttackSPE =State_Base_AttackSPE
+        self.State_Base_Def=State_Base_Def
+        self.State_Base_DefSPE = State_Base_DefSPE
+        self.State_Base_Speed = State_Base_Speed
+##################################################################################################### EV
+        self.reste_EV = 510 #252 par state
+        self.EV_HP=0
+        self.EV_Att=0
+        self.EV_AttSPE=0
+        self.EV_Def=0
+        self.EV_DefSPE=0
+        self.EV_Speed=0
+##################################################################################################### IV
+        self.IV_HP=0
+        self.IV_Att=0
+        self.IV_AttSPE=0
+        self.IV_Def=0
+        self.IV_DefSPE=0
+        self.IV_Speed=0
+#################################################################################################### state MAX
+        self.HP_full = Calcule_State_HP(self.State_Base_HP,self.IV_HP,self.EV_HP,self.Level)          #HP_MAX -> point de vie max
+        self.Attack_full = Calcule_Sate(self.State_Base_Attack,self.IV_Att,self.EV_Att,self.Level)  #Attack physique max
+        self.AttackSPE_full =Calcule_Sate(self.State_Base_AttackSPE,self.IV_AttSPE,self.EV_AttSPE,self.Level)
+        self.Defense_full = Calcule_Sate(self.State_Base_Def,self.IV_Def,self.EV_Def,self.Level)
+        self.DefenseSPE_full =Calcule_Sate(self.State_Base_DefSPE,self.IV_DefSPE,self.EV_DefSPE,self.Level)
+        self.Speed_full = Calcule_Sate(self.State_Base_Speed,self.IV_Speed,self.EV_Speed,self.Level)
+########################################################################################################### Utiliser pour le combat
+        self.HP=self.HP_full                 #HP actuel
+        self.Attack = self.Attack_full
+        self.AttackSPE =self.AttackSPE_full
+        self.Defense = self.Defense_full
+        self.DefenseSPE = self.DefenseSPE_full
+        self.Speed = self.Speed_full
+#fin
+        self.statu = []
+        self.Taux_De_Capture = Taux_De_Capture
+        self.Esquive = 100
+        self.Precision = 100
+        self.dialogue = self.Espece +" "+ self.Espece +" " + self.Espece +" !!!"
         self.sauvage = sauvage  #bool True = il est sauvage , False = il est capturè
 
+    def afficher_element(self):
+        All_Variable = {
+            "name":self.name,"Espece":self.Espece,"type":self.type,"competence":self.competence,"Niveau":self.Level,
+            "State Base HP":self.State_Base_HP,"IV HP":self.IV_HP,"EV HP":self.EV_HP,"HP full":self.HP_full,"HP":self.HP,
+            "State base Attack":self.State_Base_Attack,"IV Att":self.IV_Att,"EV Att":self.EV_Att,"Attack full":self.Attack_full,"Attack":self.Attack,
+            "State base AttackSPE":self.State_Base_AttackSPE,"IV AttSPE":self.IV_AttSPE,"EV AttSPE":self.EV_AttSPE,"AttackSPE full":self.AttackSPE_full,"AttackSPE":self.AttackSPE,
+            "State base Def":self.State_Base_Def,"IV Def":self.IV_Def,"EV Def":self.EV_Def,"Defense full":self.Defense_full,"Defense":self.Defense,
+            "State base DefSPE":self.State_Base_DefSPE,"IV DefSPE":self.IV_DefSPE,"EV DefSPE":self.EV_DefSPE,"DefenseSPE full":self.DefenseSPE_full,"DefenseSPE":self.DefenseSPE,
+            "State base Speed":self.State_Base_Speed,"IV Speed":self.IV_Speed,"EV Speed":self.EV_Speed,"Speed full":self.Speed_full,"Speed":self.Speed,
+            "statu":self.statu,"Taux De Capture":self.Taux_De_Capture,"Esquive":self.Esquive,"Precision":self.Precision,"dialogue":self.dialogue,"sauvage":self.sauvage
+        }
+        space = 16
+        tour=-1
+        debut=True
+        for i in All_Variable.keys():
+            if i == "State Base HP" or tour>=0:
+                if tour==-1:
+                    tour=6*5
+                
+                if tour%5==0:
+                    if not(debut):
+                        # if tour==30:
+                        #     print(Fore.BLUE,end="")
+                        # else:
+                        #     print(Fore.RED)
+                        print("")
+                        print("  EH dffgpb,prgbpojernj georbtepirzfnboeguOH")
+                        debut=False
+                    else:
+                        if tour!=0:
+                            print("")
+                            print("  |",i," : ",All_Variable[i],end="")
+                        else:
+                            print(" ")
+                        # print(Style.RESET_ALL)
+                        debut=True
+                        
+                else:
+                    print(" | ",i," : ",All_Variable[i],end=" ")
+                        
+                tour=tour-1
+            else:
+                print(i," :",end="")
+                for _ in range(space-len(i)):
+                    print(" ",end="")
+                if i == "competence":
+                    for j in range(len(All_Variable[i])):
+                        if j!=len(All_Variable[i])-1:
+                            print(j,". ",All_Variable[i][j].Name,end=" | ")
+                        else:
+                            print(j,". ",All_Variable[i][j].Name)
+                else:
+                    print(All_Variable[i])
+
 #crée une liste avec plein plein de pokémon#
+Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir
+Pikachu.afficher_element()
