@@ -81,11 +81,11 @@ def Aficher_Matrice_Des_Type():
 #Aficher_Matrice_Des_Type()
 def Calcule_State_HP(Base,IV,EV,NIV):
         PV = ((((2*Base+IV+(EV/4)))*NIV)/100)+NIV+10
-        return PV
+        return round(PV*1000)/1000
     
 def Calcule_Sate(Base,IV,EV,NIV):
         State = ((2*Base+IV+(EV/4))*NIV)+5
-        return State
+        return round(State*1000)/1000
 
 
 Liste_de_Pokemon = []
@@ -106,7 +106,7 @@ class Pokemon:
         self.State_Base_DefSPE = State_Base_DefSPE
         self.State_Base_Speed = State_Base_Speed
 ##################################################################################################### EV
-        self.reste_EV = 510 #252 par state
+        self.EV = 600 #294 par state #6 a chaque niveaux il gagne 6 point d'exp
         self.EV_HP=0
         self.EV_Att=0
         self.EV_AttSPE=0
@@ -152,6 +152,8 @@ class Pokemon:
             "State base Speed":self.State_Base_Speed,"IV Speed":self.IV_Speed,"EV Speed":self.EV_Speed,"Speed full":self.Speed_full,"Speed":self.Speed,
             "statu":self.statu,"Taux De Capture":self.Taux_De_Capture,"Esquive":self.Esquive,"Precision":self.Precision,"dialogue":self.dialogue,"sauvage":self.sauvage
         }
+    
+
     def afficher_state(self):
         debut=False
         space=[len("State base AttackSPE "),len("IV AttSPE "),len("EV AttSPE "),len("AttackSPE full "),len("AttackSPE ")]
@@ -203,6 +205,35 @@ class Pokemon:
                     print(self.All_Variable[i])
             if i=="Speed":
                 pause = True
+
+    def update(self):
+        self.HP_full = Calcule_State_HP(self.State_Base_HP,self.IV_HP,self.EV_HP,self.Level)          #HP_MAX -> point de vie max
+        self.Attack_full = Calcule_Sate(self.State_Base_Attack,self.IV_Att,self.EV_Att,self.Level)  #Attack physique max
+        self.AttackSPE_full =Calcule_Sate(self.State_Base_AttackSPE,self.IV_AttSPE,self.EV_AttSPE,self.Level)
+        self.Defense_full = Calcule_Sate(self.State_Base_Def,self.IV_Def,self.EV_Def,self.Level)
+        self.DefenseSPE_full =Calcule_Sate(self.State_Base_DefSPE,self.IV_DefSPE,self.EV_DefSPE,self.Level)
+        self.Speed_full = Calcule_Sate(self.State_Base_Speed,self.IV_Speed,self.EV_Speed,self.Level)
+        #########################################################################""
+        self.All_Variable["HP full"] = self.HP_full
+        self.All_Variable["Attack full"] = self.Attack_full
+        self.All_Variable["AttackSPE full"] = self.AttackSPE_full
+        self.All_Variable["Defense full"] = self.Defense_full
+        self.All_Variable["DefenseSPE full"] = self.DefenseSPE_full
+        self.All_Variable["Speed full"] = self.Speed_full
+########################################################################################################### Utiliser pour le combat
+        self.HP=self.HP_full                 #HP actuel
+        self.Attack = self.Attack_full
+        self.AttackSPE =self.AttackSPE_full
+        self.Defense = self.Defense_full
+        self.DefenseSPE = self.DefenseSPE_full
+        self.Speed = self.Speed_full
+        #########################################################################""
+        self.All_Variable["HP"] = self.HP
+        self.All_Variable["Attack"] = self.Attack
+        self.All_Variable["AttackSPE"] = self.AttackSPE
+        self.All_Variable["Defense"] = self.Defense
+        self.All_Variable["DefenseSPE"] = self.DefenseSPE
+        self.All_Variable["Speed"] = self.Speed
             
     def gain_Exp(self,EXP_Gagner):
         if self.Level==100:
@@ -212,26 +243,103 @@ class Pokemon:
             a=self.Level
             print("Votre Pokemon Monte de Niveau Felicitation ces state augmente de ",a," --> ",a+1," Niveau")
             self.Level += 1
+            self.EV_Make()
+            self.update()
             if self.Level==100 :
                 self.Level=100
+                self.All_Variable["Level"] = self.Level
                 self.Exp =0
+                self.All_Variable["Experience"] = self.Exp
                 print("Votre Pokemon qui s'apelle ",self.name," a atteint son niveaux max bravo !!!")
                 return
             self.Exp -= a*0.07
+            self.All_Variable["Level"] = self.Level
+            self.All_Variable["Experience"] = self.Exp
+
     def IV_Make(self):
-        pass
+        self.IV_HP = random.randint(0,31)
+        self.IV_Att = random.randint(0,31)
+        self.IV_AttSPE = random.randint(0,31)
+        self.IV_Def = random.randint(0,31)
+        self.IV_DefSPE = random.randint(0,31)
+        self.Speed = random.randint(0,31)
+        ###################################################""
+        self.All_Variable["IV HP"] = self.IV_HP
+        self.All_Variable["IV Att"]= self.IV_Att
+        self.All_Variable["IV AttSPE"]= self.IV_AttSPE
+        self.All_Variable["IV Def"]= self.IV_Def
+        self.All_Variable["IV DefSPE"]=self.IV_DefSPE
+        self.All_Variable["IV Speed"]=self.Speed
+        self.update()
+
+    def EV_Make(self):
+        self.EV -=6
+        choix_de_la_state = random.randint(1,6)
+        if choix_de_la_state == 1 :
+            if self.EV_HP == 294:
+                self.EV += 6
+                self.EV_Make()
+            self.EV_HP += 6
+            self.All_Variable["EV HP"]=self.EV_HP
+        elif choix_de_la_state == 2 :
+            if self.EV_Att == 294:
+                self.EV += 6
+                self.EV_Make()
+            self.EV_Att += 6
+            self.All_Variable["EV Att"]= self.EV_Att
+        elif choix_de_la_state == 3 :
+            if self.EV_AttSPE == 294:
+                self.EV += 6
+                self.EV_Make()
+            self.EV_AttSPE += 6
+            self.All_Variable["EV AttSPE"]= self.EV_AttSPE
+        elif choix_de_la_state == 4 :
+            if self.EV_Def == 294:
+                self.EV += 6
+                self.EV_Make()
+            self.EV_Def += 6
+            self.All_Variable["EV Def"] = self.EV_Def
+        elif choix_de_la_state == 5 :
+            if self.EV_DefSPE == 294:
+                self.EV += 6
+                self.EV_Make()
+            self.EV_Def += 6
+            self.All_Variable["EV DefSPE"] = self.EV_DefSPE
+        elif choix_de_la_state == 6 :
+            if self.EV_Speed == 294:
+                self.EV += 6
+                self.EV_Make()
+            self.EV_Def += 6
+            self.All_Variable["EV Speed"] = self.EV_Speed
+        
+        
 
 
+Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir
+
+
+######################" TEST IV "
+# Pikachu.afficher_state()
+# Pikachu.IV_Make()
+# print("____________________________________\napres : ")
+# Pikachu.afficher_state()
+
+###########################################################################################"TEST Niveau et EV"
+print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
+Pikachu.afficher_state()
+Pikachu.gain_Exp(100)#faire une fonction qui fait la monter des Niveau
+print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
+Pikachu.afficher_state()
+
+##################################"" Afficher all pokemon
 #crée une liste avec plein plein de pokémon#
 def afficher_Liste_Pokemon():
     for i in range (len(Liste_de_Pokemon)):
         print(i," : ",Liste_de_Pokemon[i].name)
-Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir
-print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
-Pikachu.gain_Exp(0.1)#faire une fonction qui fait la monter des Niveau
-print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
 #afficher_Liste_Pokemon()
 print()
-#FINIR IV ET EV 
+
+
+#FINIR IV ET EV fini 
 #PUIS finir les interaction avec la map
 #PUIS la fonction de Combat
