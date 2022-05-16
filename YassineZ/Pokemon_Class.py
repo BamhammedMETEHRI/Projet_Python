@@ -340,7 +340,8 @@ Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,
 #crée une liste avec plein plein de pokémon#
 def afficher_Liste_Pokemon():
     for i in range (len(Liste_de_Pokemon)):
-        print(i," : ",Liste_de_Pokemon[i].name)
+        print(i," : ",Liste_de_Pokemon[i].name)"<class '__
+print(str(type(Pikachu))==main__.Pokemon'>")
 #afficher_Liste_Pokemon()
 # print()
 

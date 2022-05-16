@@ -152,6 +152,9 @@ class Joueur(Dresseur):
                     print("Fais par \n Yassine Zaoui \n Bahm Metheri \n Yassine Frikiche \n Meliha")
                     sleep(2)
                     clear()
+            elif type(self.avant)==PNJ_Soigneur_Marchand:
+                self.avant.action(self)
+                carte.show()
             
 
 
@@ -174,31 +177,57 @@ class PNJ_Soigneur_Marchand(Dresseur):
         super().__init__(name, team,Fore.BLUE+"♡"+Style.RESET_ALL)
         self.inventaire=[Item("Potion",""),Item("Poké ball","pokeball")]
     
+    def action(self,target):
+        print("Bonjour je suis ",self.name," je peux soignier tout t'es pokemon ou vendre des objet qui peuvent t'aider")
+        choix = input("1- Soigner \n2-Comercer \n3-Quiter\n")
+        while choix != "3":
+            clear()
+            if choix == "2":
+                self.comercer(target)
+            elif choix =="1":
+                self.health(target)
+            choix = input("1- Soignier \n2-Comercer \n3-Quite\n")
+    
     #------------------------------------------------------------------
     def health(self,target):
         """
         fonction qui permet de soigner les pokemon de target
         """
-        for i in target.team:
-            i.HP = i.fullHP
+        if len(target.team)>0 and str(type(target.team[0]))=="<class '__main__.Pokemon'>":
+                for i in target.team:
+                    i.HP=i.HP_full                 #HP actuel
+                    i.Attack = i.Attack_full
+                    i.AttackSPE =i.AttackSPE_full
+                    i.Defense = i.Defense_full
+                    i.DefenseSPE = i.DefenseSPE_full
+                    i.Speed = i.Speed_full
+                    print(i.name," Est soignier :)")
+                    sleep(1)
+        else:
+            print("Mais !!? tu n'as pas de pokemon >:(")
+            sleep(2)
     #------------------------------------------------------------------
 
     def comercer(self,target):
         """
         fonction qui permet de faire du comerce avec target
         """
-        Choix0 = int(input("1.Acheter 2.Vendre 3.Quiter"))
+        Choix0 = int(input("1.Acheter 2.Vendre 3.Quiter\n"))
         if Choix0 == 1 :
-            for i in range(self.inventaire):
-                print("id ",i," nom ",self.inventaire[i].name," prix",self.inventaire[i].prix)
+            clear()
+            print("Voila ce que je vend")
+            for i in range(len(self.inventaire)):
+                print("id ",i,"| nom ",self.inventaire[i].name," , prix : ",self.inventaire[i].prix)
+            print("\ntu as ",self.money,"€\n")
             Choix = int(input("que shouaite tu acheter? : "))
             if self.inventaire[Choix].prix <= target.money:
                 target.inventaire.append(self.inventaire[Choix])
             else :
                 print("Trop cher!!")
         elif Choix0 == 2:
-            if target.iventaire == []:
+            if target.inventaire == []:
                 print("tu n'as rien n'a vendre :\\")
+                sleep(2)
             else:
                 for i in (target.inventaire):
                     print("id ",i," nom ",self.inventaire[i].name," prix",self.inventaire[i].prix)
@@ -207,5 +236,8 @@ class PNJ_Soigneur_Marchand(Dresseur):
                 target.inventaire.pop(Choix)
         else :
             print("Au revoir :)")
+            clear()
             return
+        sleep(1.5)
+        clear()
     #------------------------------------------------------------------

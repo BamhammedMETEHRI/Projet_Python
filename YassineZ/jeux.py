@@ -17,7 +17,7 @@ bob = Dresseur_Class.Joueur("Yassine",[])
 test.Placement_Dresseur(bob,0,9)
 test.show()
 bob.Deplacement_dans_la_Map(test)
-print(str(type(FIN))=="<class 'map_Class.biome'>")
+# print(str(type(FIN))=="<class 'map_Class.biome'>")
 
 #FINIR IV ET EV fini  FIN
 #PUIS finir les interaction avec la map (jai fais la moitier du chemin )
