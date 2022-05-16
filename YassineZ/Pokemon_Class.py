@@ -1,3 +1,4 @@
+from sre_constants import GROUPREF_UNI_IGNORE
 import colorama
 from colorama import Fore
 from colorama import Style
@@ -311,7 +312,11 @@ class Pokemon:
                 self.EV_Make()
             self.EV_Def += 6
             self.All_Variable["EV Speed"] = self.EV_Speed
-        
+
+    def Make_Level(self,Level):
+        self.Level = Level
+        self.All_Variable["Level"] = self.Level
+        self.update()
         
 
 
@@ -325,11 +330,11 @@ Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,
 # Pikachu.afficher_state()
 
 ###########################################################################################"TEST Niveau et EV"
-print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
-Pikachu.afficher_state()
-Pikachu.gain_Exp(100)#faire une fonction qui fait la monter des Niveau
-print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
-Pikachu.afficher_state()
+# print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
+# Pikachu.afficher_state()
+# Pikachu.gain_Exp(100)#faire une fonction qui fait la monter des Niveau
+# print("Niveau : ",Pikachu.Level,"  | EXP : ",Pikachu.Exp)
+# Pikachu.afficher_state()
 
 ##################################"" Afficher all pokemon
 #crée une liste avec plein plein de pokémon#
@@ -337,9 +342,5 @@ def afficher_Liste_Pokemon():
     for i in range (len(Liste_de_Pokemon)):
         print(i," : ",Liste_de_Pokemon[i].name)
 #afficher_Liste_Pokemon()
-print()
+# print()
 
-
-#FINIR IV ET EV fini 
-#PUIS finir les interaction avec la map
-#PUIS la fonction de Combat

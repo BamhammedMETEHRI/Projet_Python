@@ -1,14 +1,13 @@
 #Class des map et Biome
 from colorama import Fore
 from colorama import Style
-
 class biome:
     def __init__(self,physique,effect=None):
         self.image =physique
         self.effect =effect
 mur= biome(Fore.BLACK+"#"+Style.RESET_ALL,"Stop")
-Herbe_All = biome(Fore.GREEN+"~"+Style.RESET_ALL,"Taux d'appiration de tout les pokèmon egaux")
 rien = biome(" ")
+
 class Map:
     def __init__(self,Longuer,Largeur):
         self.town =[]
@@ -20,6 +19,7 @@ class Map:
                 else:
                     l.append(rien)
             self.town.append(l)
+
     def append_biome(self,element,Point_de_depart_X,Point_de_depart_Y,Longuer_Y,Largeur_X):
         if Point_de_depart_X+Largeur_X > (len(self.town[0])-2) or Point_de_depart_Y+Longuer_Y >(len(self.town)-2):
             print("Dimmension pas correcte error Out-of-Range")
@@ -32,9 +32,22 @@ class Map:
     def show(self):
         for i in self.town:
             for j in i:
-                print(j.image,end="")
+                if type(j) == biome:
+                    print(j.image,end="")
+                else:
+                    print(j.physique,end="")
             print()
-test = Map(10,10)
-test.show()
-test.append_biome(Herbe_All,0,0,5,7)
-test.show()
+    def Placement_Dresseur(self,Dresseur,X,Y):
+        X+=1
+        Y+=1
+        if X<=0 or Y<=0 or X>=len(self.town[0])-1 or Y>=len(self.town)-1:
+            print("Lime de Terrain vous ne pouvez pas le plasser")
+        else :
+            if str(type(Dresseur)) == "<class 'Dresseur_Class.Joueur'>":
+                for i in self.town:
+                    for j in i:
+                        if str(type(j)) == "<class 'Dresseur_Class.Joueur'>":
+                            print("Il ne peut pas avoir Plus de 1 Joueur Par map")
+                Dresseur.avant= self.town[Y][X]
+            self.town[Y][X]=Dresseur
+

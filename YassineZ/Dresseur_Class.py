@@ -1,11 +1,24 @@
 #crée la classe des dresseur toute les entité ( se sont des dresseur de pokèmon) non pokèmon #
-import colorama
+#ici ou je teste mes class
+# import only system from os
+from os import system, name
+from re import A
+# import sleep to show output for some time period
+from time import sleep
 from colorama import Fore
 from colorama import Style
 import random
 
 from Item_Class import Item
-
+def clear():
+  
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+  
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
 ####### le parent de tout les pnj et joueur ##########################################################################################################
 class Dresseur:
     """
@@ -25,7 +38,7 @@ class Dresseur:
         self.inventaire=[]  #les objet que possède le dresseur 
         self.team= team     #l'equipe du dresseur qui sera une liste de 6
         self.dialogue= ""   #chaque dresseur aura une boite de dialogue
-        self.physique = physique  #a quoi ressemblera le personnage sur la map
+        self.physique = physique  #a quoi ressemblera le personnage sur la carte.town
         
 ######### celui qui va jouer ########################################################################################################
 class Joueur(Dresseur):
@@ -35,7 +48,8 @@ class Joueur(Dresseur):
 
     def __init__(self, name, team):
         self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son equipe
-        super().__init__(name, team,Fore.BLACK+'H'+Style.RESET_ALL)# il sera en H pour Hero
+        self.avant = "" #Pour le deplacement
+        super().__init__(name, team,Fore.WHITE+'H'+Style.RESET_ALL)# il sera en H pour Hero
         
     #------------------------------------------------------------------
     def afficher(self):
@@ -57,6 +71,89 @@ class Joueur(Dresseur):
         else:
             print("Votre equipe est complète votre pokèmon sera dans le PC")
             self.Ordi.append(membre)
+    #------------------------------------------------------------------
+    def Deplacement_dans_la_Map(self,carte):
+        y=0
+        x=0
+        for i in range(len(carte.town)):
+            for j in range(i):
+                if type(carte.town[i][j])==Joueur:
+                    y=i
+                    x=j
+                    break
+            if x !=0 and y != 0:
+                break
+        clear()
+        carte.show()
+        stop = True
+        while stop:
+            deplacer=input(
+            "  "+Fore.LIGHTBLUE_EX+"Z"+Style.RESET_ALL+"  \n"+Fore.LIGHTGREEN_EX+"Q"+Style.RESET_ALL+" "+Fore.LIGHTMAGENTA_EX+"S"+Style.RESET_ALL+" "+Fore.LIGHTYELLOW_EX+"D"+Style.RESET_ALL+"\n"+Fore.LIGHTBLUE_EX+"Z haut"+Style.RESET_ALL+", "+Fore.LIGHTGREEN_EX+"Q a gauche"+Style.RESET_ALL+", "+Fore.LIGHTMAGENTA_EX+"S en bas "+Style.RESET_ALL+"et "+Fore.LIGHTYELLOW_EX+"D a droite "+Style.RESET_ALL+": ")
+            clear()
+            if deplacer == "Z":
+                y -= 1
+                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
+                    if carte.town[y][x].effect =="Stop":
+                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        y +=1
+                    else :
+                        carte.town[y+1][x] = self.avant
+                        self.avant = carte.town[y][x] 
+                else :
+                    carte.town[y+1][x] = self.avant
+                    self.avant = carte.town[y][x] 
+            elif deplacer == "Q":
+                x -= 1
+                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
+                    if carte.town[y][x].effect =="Stop":
+                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        x +=1
+                    else :
+                        carte.town[y][x+1] = self.avant
+                        self.avant = carte.town[y][x] 
+                else :
+                    carte.town[y][x+1] = self.avant
+                    self.avant = carte.town[y][x] 
+                    
+            elif deplacer == "S":
+                y += 1
+                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
+                    if carte.town[y][x].effect =="Stop":
+                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        y -=1
+                    else :
+                        carte.town[y-1][x] = self.avant
+                        self.avant = carte.town[y][x]
+                else :
+                    carte.town[y-1][x] = self.avant
+                    self.avant = carte.town[y][x] 
+                    
+            elif deplacer == "D":
+                x += 1
+                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
+                    if carte.town[y][x].effect =="Stop":
+                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        x -=1
+                    else :
+                        carte.town[y][x-1] = self.avant
+                        self.avant = carte.town[y][x]   
+                else :
+                    carte.town[y][x-1] = self.avant
+                    self.avant = carte.town[y][x]           
+            carte.town[y][x]=self
+            carte.show()
+            if str(type(self.avant))=="<class 'map_Class.biome'>":
+                if (self.avant.image == "F"):
+                    stop=False
+                    clear()
+                    print(self.avant.effect)
+                    sleep(2)
+                    clear()
+                    print("Fais par \n Yassine Zaoui \n Bahm Metheri \n Yassine Frikiche \n Meliha")
+                    sleep(2)
+                    clear()
+            
+
 
 ######## les joueur adverse##############################################################################################
 class PNJ_Adverse(Dresseur):
@@ -74,7 +171,7 @@ class PNJ_Soigneur_Marchand(Dresseur):
     des pokèball et des potion
     """
     def __init__(self, name, team):
-        super().__init__(name, team)
+        super().__init__(name, team,Fore.BLUE+"♡"+Style.RESET_ALL)
         self.inventaire=[Item("Potion",""),Item("Poké ball","pokeball")]
     
     #------------------------------------------------------------------

@@ -134,7 +134,7 @@ def Bouger_anciene_map(Joueur):
 
 # def bouger(Joueur):
 
-#Bouger_anciene_map(bob)
+Bouger_anciene_map(bob)
 print("salut")
 print(type(bob)== Dresseur_Class.Joueur)
 
