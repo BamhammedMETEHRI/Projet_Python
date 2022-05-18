@@ -2,7 +2,6 @@
 #ici ou je teste mes class
 # import only system from os
 from os import system, name
-from re import A
 # import sleep to show output for some time period
 from time import sleep
 from colorama import Fore
@@ -10,6 +9,7 @@ from colorama import Style
 import random
 
 from Item_Class import Item
+
 def clear():
   
     # for windows
@@ -19,6 +19,7 @@ def clear():
     # for mac and linux(here, os.name is 'posix')
     else:
         _ = system('clear')
+
 ####### le parent de tout les pnj et joueur ##########################################################################################################
 class Dresseur:
     """
@@ -39,7 +40,8 @@ class Dresseur:
         self.team= team     #l'equipe du dresseur qui sera une liste de 6
         self.dialogue= ""   #chaque dresseur aura une boite de dialogue
         self.physique = physique  #a quoi ressemblera le personnage sur la carte.town
-        
+
+
 ######### celui qui va jouer ########################################################################################################
 class Joueur(Dresseur):
     """
@@ -52,7 +54,7 @@ class Joueur(Dresseur):
         super().__init__(name, team,Fore.WHITE+'H'+Style.RESET_ALL)# il sera en H pour Hero
         
     #------------------------------------------------------------------
-    def afficher(self):
+    def afficher_PC(self):
         """
         affiche tout les pokèmon que le joueur à attraper et 
         qui ne sont pas dans son equipe
@@ -70,23 +72,40 @@ class Joueur(Dresseur):
             self.team(membre)
         else:
             print("Votre equipe est complète votre pokèmon sera dans le PC")
-            self.Ordi.append(membre)
+            self.PC_DU_JOUEUR.append(membre)
     #------------------------------------------------------------------
     def Deplacement_dans_la_Map(self,carte):
+        ListeOfAdversaire= []    
         y=0
         x=0
+        ### Pour trouver la position du Joueur
+
         for i in range(len(carte.town)):
-            for j in range(i):
-                if type(carte.town[i][j])==Joueur:
+            for j in range(len(carte.town[0])):
+                if str(type(carte.town[i][j])) == "<class 'Dresseur_Class.PNJ_Adverse'>":
+                    print("Y a QUELQUN !!")
+                    sleep(1)
+                    ListeOfAdversaire.append(carte.town[i][j])
+                elif type(carte.town[i][j])==Joueur:
+                    print("On as trouver la position du Joueur")
+                    sleep(1)
                     y=i
                     x=j
-                    break
-            if x !=0 and y != 0:
-                break
+        ### FIN
         clear()
         carte.show()
+        ###Debut de la boucle while tant qu'on ne tombe pas sur Fin
         stop = True
         while stop:
+            #Pour PNJ_Adverse
+            if ListeOfAdversaire != []:
+                print("il y a ",len(ListeOfAdversaire)," Adversaire attention")
+                print("Voila leur Nom : ")
+                for z in ListeOfAdversaire:
+                    print(" -",z.name)
+                    z.changement_de_position(1)
+            #FIN
+    #######################################################################################
             deplacer=input(
             "  "+Fore.LIGHTBLUE_EX+"Z"+Style.RESET_ALL+"  \n"+Fore.LIGHTGREEN_EX+"Q"+Style.RESET_ALL+" "+Fore.LIGHTMAGENTA_EX+"S"+Style.RESET_ALL+" "+Fore.LIGHTYELLOW_EX+"D"+Style.RESET_ALL+"\n"+Fore.LIGHTBLUE_EX+"Z haut"+Style.RESET_ALL+", "+Fore.LIGHTGREEN_EX+"Q a gauche"+Style.RESET_ALL+", "+Fore.LIGHTMAGENTA_EX+"S en bas "+Style.RESET_ALL+"et "+Fore.LIGHTYELLOW_EX+"D a droite "+Style.RESET_ALL+": ")
             clear()
@@ -139,9 +158,12 @@ class Joueur(Dresseur):
                         self.avant = carte.town[y][x]   
                 else :
                     carte.town[y][x-1] = self.avant
-                    self.avant = carte.town[y][x]           
+                    self.avant = carte.town[y][x]    
+    #####################################################################################       
+            clear()
             carte.town[y][x]=self
             carte.show()
+            ######################################################################
             if str(type(self.avant))=="<class 'map_Class.biome'>":
                 if (self.avant.image == "F"):
                     stop=False
@@ -149,7 +171,7 @@ class Joueur(Dresseur):
                     print(self.avant.effect)
                     sleep(2)
                     clear()
-                    print("Fais par \n Yassine Zaoui \n Bahm Metheri \n Yassine Frikiche \n Meliha")
+                    print("Fais par \n Yassine Zaoui \n Bamhammed Metehri \n Yassine Frikich \n Meliha Urlu")
                     sleep(2)
                     clear()
             elif type(self.avant)==PNJ_Soigneur_Marchand:
@@ -164,8 +186,24 @@ class PNJ_Adverse(Dresseur):
     Se sont les ordi qui provoque des duel au Joueur
     """
     def __init__(self, name, team):
-        super().__init__(name, team)
+        self.position = [Fore.RED+"<"+Style.RESET_ALL,Fore.RED+"^"+Style.RESET_ALL,Fore.RED+">"+Style.RESET_ALL,Fore.RED+"V"+Style.RESET_ALL]
+        self.posture = 0 
+        super().__init__(name, team,self.position[self.posture])
         self.money = random.randint(10,20)
+        self.deplacement = [] 
+    
+    def changement_de_position(self,bouge):
+        self.posture += bouge
+        if self.posture == -1:
+            self.posture = len(self.position)-1
+        elif self.posture>=len(self.position):
+            self.posture = 0
+        self.physique = self.position[self.posture]
+    
+    def vision(self):
+        pass
+
+    
 
 ######## soigneur et vendeur #########################################################################################################
 class PNJ_Soigneur_Marchand(Dresseur):
@@ -187,6 +225,7 @@ class PNJ_Soigneur_Marchand(Dresseur):
             elif choix =="1":
                 self.health(target)
             choix = input("1- Soignier \n2-Comercer \n3-Quite\n")
+            clear()
     
     #------------------------------------------------------------------
     def health(self,target):
@@ -212,8 +251,8 @@ class PNJ_Soigneur_Marchand(Dresseur):
         """
         fonction qui permet de faire du comerce avec target
         """
-        Choix0 = int(input("1.Acheter 2.Vendre 3.Quiter\n"))
-        if Choix0 == 1 :
+        Choix0 = input("1.Acheter 2.Vendre 3.Quiter\n")
+        if Choix0 == "1" :
             clear()
             print("Voila ce que je vend")
             for i in range(len(self.inventaire)):
@@ -221,10 +260,11 @@ class PNJ_Soigneur_Marchand(Dresseur):
             print("\ntu as ",self.money,"€\n")
             Choix = int(input("que shouaite tu acheter? : "))
             if self.inventaire[Choix].prix <= target.money:
+                target.money -= self.inventaire[Choix].prix
                 target.inventaire.append(self.inventaire[Choix])
             else :
                 print("Trop cher!!")
-        elif Choix0 == 2:
+        elif Choix0 == "2":
             if target.inventaire == []:
                 print("tu n'as rien n'a vendre :\\")
                 sleep(2)
@@ -234,10 +274,12 @@ class PNJ_Soigneur_Marchand(Dresseur):
                 Choix = int(input("que shouaite tu vendre? : "))
                 target.money += target.inventaire[Choix].prix
                 target.inventaire.pop(Choix)
-        else :
+        elif Choix0 == "3" :
             print("Au revoir :)")
             clear()
             return
+        else : 
+            clear()
         sleep(1.5)
         clear()
     #------------------------------------------------------------------

@@ -1,4 +1,3 @@
-from sre_constants import GROUPREF_UNI_IGNORE
 import colorama
 from colorama import Fore
 from colorama import Style
@@ -314,6 +313,8 @@ class Pokemon:
             self.All_Variable["EV Speed"] = self.EV_Speed
 
     def Make_Level(self,Level):
+        for _ in range(self.Level-Level):
+            self.EV_Make()
         self.Level = Level
         self.All_Variable["Level"] = self.Level
         self.update()
@@ -340,8 +341,8 @@ Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,
 #crée une liste avec plein plein de pokémon#
 def afficher_Liste_Pokemon():
     for i in range (len(Liste_de_Pokemon)):
-        print(i," : ",Liste_de_Pokemon[i].name)"<class '__
-print(str(type(Pikachu))==main__.Pokemon'>")
+        print(i," : ",Liste_de_Pokemon[i].name)
 #afficher_Liste_Pokemon()
 # print()
+# Aficher_Matrice_Des_Type()
 

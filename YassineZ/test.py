@@ -1,3 +1,9 @@
+# 
+# 
+#                This fichier is not important anymore
+# 
+# 
+# 
 #ici ou je teste mes class
 # import only system from os
 from os import system, name
@@ -134,7 +140,7 @@ def Bouger_anciene_map(Joueur):
 
 # def bouger(Joueur):
 
-Bouger_anciene_map(bob)
+# Bouger_anciene_map(bob)
 print("salut")
 print(type(bob)== Dresseur_Class.Joueur)
 
@@ -163,9 +169,9 @@ print(type(bob)== Dresseur_Class.Joueur)
 #  /²²¨¨¨¨¨¨¨¨²²\
 # /²²¨¨¨¨¨¨¨¨¨¨²²\
 clear()
-s = [Fore.BLUE+"<"+Style.RESET_ALL,">"+Style.RESET_ALL,"V","^"+Style.RESET_ALL]
-print(s[1])
-clear()
+s = [Fore.RED+"<"+Style.RESET_ALL,Fore.RED+"^"+Style.RESET_ALL,Fore.RED+">"+Style.RESET_ALL,Fore.RED+"V"+Style.RESET_ALL]
+print(s[0]+s[1]+s[2]+s[3])
+
 # print("N\{&#x25A0}")
 # print("■")
 inters=[' ','╴','╷', '┐','╶','─','┌','┬','╵','┘','│','┤','└','┴','├','┼']
@@ -179,4 +185,3 @@ print()
 print(inters[6],inters[7],inters[3])
 print(inters[14],inters[15],inters[11])
 print(inters[12],inters[13],inters[9])
-clear()

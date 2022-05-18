@@ -15,7 +15,7 @@ music = pygame.mixer.Sound('music.wav')#mp3 sa marche pas
     .get_volume()
     .get_lenght(s)
 """
-music.play(0,50000)
+music.play(0)
 print("salut")
 pygame.display.flip()
 

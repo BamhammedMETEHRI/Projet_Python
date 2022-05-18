@@ -2,9 +2,10 @@
 from colorama import Fore
 from colorama import Style
 class biome:
-    def __init__(self,physique,effect=None):
-        self.image =physique
-        self.effect =effect
+    def __init__(self,image,effect=None):
+        self.image = image
+        self.effect = effect
+
 mur= biome(Fore.BLACK+"#"+Style.RESET_ALL,"Stop")
 rien = biome(" ")
 
@@ -33,10 +34,11 @@ class Map:
         for i in self.town:
             for j in i:
                 if type(j) == biome:
-                    print(j.image,end="")
+                    print(j.image,end=" ")
                 else:
-                    print(j.physique,end="")
+                    print(j.physique,end=" ")
             print()
+            
     def Placement_Dresseur(self,Dresseur,X,Y):
         X+=1
         Y+=1
