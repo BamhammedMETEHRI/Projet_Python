@@ -22,6 +22,6 @@ Gamer.Deplacement_dans_la_Map(test)
 # print(str(type(FIN))=="<class 'map_Class.biome'>")
 
 #FINIR IV ET EV fini  FIN
-#PUIS finir les interaction avec la map (jai fais la moitier du chemin )
+#PUIS finir les interaction avec la map (jai fais la moitier du chemin ) refaire la fonction de deplacement
 #PUIS la fonction de Combat
 #apres jaurais fini
