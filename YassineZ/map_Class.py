@@ -35,9 +35,9 @@ class Map:
         for i in self.town:
             for j in i:
                 if type(j) == biome:
-                    print(j.image,end=" ")
+                    print(j.image,end="  ")
                 else:
-                    print(j.physique,end=" ")
+                    print(j.physique,end="  ")
             print()
             
     def Placement_Dresseur(self,Dresseur,X,Y):

@@ -3,7 +3,7 @@
 # import only system from os
 from os import system, name
 # import sleep to show output for some time period
-from time import sleep
+from time import sleep, time
 from colorama import Fore
 from colorama import Style
 import random
@@ -43,6 +43,13 @@ class Dresseur:
         self.team= team     #l'equipe du dresseur qui sera une liste de 6
         self.dialogue= ""   #chaque dresseur aura une boite de dialogue
         self.physique = physique  #a quoi ressemblera le personnage sur la carte.town
+    
+    def recherche_Map(self,map):
+        for i in range (len(map.town)):
+            for j in range(len(map.town[0])):
+                if map.town[i][j]==self:
+                    return i,j
+        print("on as rien trouver")
 
 
 ######### celui qui va jouer ########################################################################################################
@@ -199,18 +206,118 @@ class PNJ_Adverse(Dresseur):
                 if type(map.town[y][x])==Joueur:   
                     if  x<self.AxeX and y==self.AxeY and self.physique == self.position[1]:
                         print("Je te Vois HAHAHA tu es a gauche")
+                        self.Aller_a_gauche(map,self.AxeX-x)
                         break
                     elif y<self.AxeY and x==self.AxeX and self.physique == self.position[2]:
                         print("Je te Vois HAHAHA tu es en Haut")
+                        self.Aller_en_haut(map,self.AxeY-y)
                         break
                     elif x>self.AxeX and y==self.AxeY and self.physique == self.position[3]:
                         print("Je te Vois HAHAHA tu es a Droite")
+                        self.Aller_a_droite(map,self.AxeX-x)
                         break
                     elif y>self.AxeY and x==self.AxeX and self.physique == self.position[0]:
                         print("Je te Vois HAHAHA tu es en Bas !!")
+                        self.Aller_en_bas(map,self.AxeY-y)
                         break
-
+    def Aller_a_gauche(self,map,nbr):
+        self.posture -=1
+        self.physique = self.position[self.posture]
+        for _ in range(nbr):
+            map.town[self.AxeY][self.AxeX]=self.avant
+            self.AxeX -= 1
+            self.avant=map.town[self.AxeY][self.AxeX]
+            map.town[self.AxeY][self.AxeX] = self
+            if str(type(self.avant)) == "<class 'map_Class.biome'>" and self.avant.effect == "Stop":
+                map.town[self.AxeY][self.AxeX]=self.avant
+                self.AxeX +=1
+                self.avant = map.town[self.AxeY][self.AxeX]
+                map.town[self.AxeY][self.AxeX]=self
+                print(self.name," c'est cogné contre un mur")
+                return
+            elif type(self.avant)==Joueur:
+                A = self.avant.avant
+                self.avant.avant = self
+                self.avant = A
+            sleep(0.75)
+            clear()
+            map.show()
             
+        sleep(1)
+
+    def Aller_a_droite(self,map,nbr):
+        self.posture -=1
+        self.physique = self.position[self.posture]
+        for _ in range(nbr*-1):
+            map.town[self.AxeY][self.AxeX]=self.avant
+            self.AxeX += 1
+            self.avant=map.town[self.AxeY][self.AxeX]
+            map.town[self.AxeY][self.AxeX] = self
+            if str(type(self.avant)) == "<class 'map_Class.biome'>" and self.avant.effect == "Stop":
+                map.town[self.AxeY][self.AxeX]=self.avant
+                self.AxeX -=1
+                self.avant = map.town[self.AxeY][self.AxeX]
+                map.town[self.AxeY][self.AxeX]=self
+                print(self.name," c'est cogné contre un mur")
+                return
+            elif type(self.avant)==Joueur:
+                A = self.avant.avant
+                self.avant.avant = self
+                self.avant = A
+            sleep(0.75)
+            clear()
+            map.show()
+        sleep(1)
+    
+    def Aller_en_haut(self,map,nbr):
+        self.posture -=1
+        self.physique = self.position[self.posture]
+        for _ in range(nbr):
+            map.town[self.AxeY][self.AxeX]=self.avant
+            self.AxeY -= 1
+            self.avant=map.town[self.AxeY][self.AxeX]
+            map.town[self.AxeY][self.AxeX] = self
+            if str(type(self.avant)) == "<class 'map_Class.biome'>" and self.avant.effect == "Stop":
+                map.town[self.AxeY][self.AxeX]=self.avant
+                self.AxeY +=1
+                self.avant = map.town[self.AxeY][self.AxeX]
+                map.town[self.AxeY][self.AxeX]=self
+                print(self.name," c'est cogné contre un mur")
+                return
+            elif type(self.avant)==Joueur:
+                A = self.avant.avant
+                self.avant.avant = self
+                self.avant = A
+            sleep(0.75)
+            clear()
+            map.show()
+            
+        sleep(1)
+    
+    def Aller_en_bas(self,map,nbr):
+        self.posture -=1
+        self.physique = self.position[self.posture]
+        for _ in range(nbr*-1):
+            map.town[self.AxeY][self.AxeX]=self.avant
+            self.AxeY += 1
+            self.avant=map.town[self.AxeY][self.AxeX]
+            map.town[self.AxeY][self.AxeX] = self
+            if str(type(self.avant)) == "<class 'map_Class.biome'>" and self.avant.effect == "Stop":
+                map.town[self.AxeY][self.AxeX]=self.avant
+                self.AxeY -=1
+                self.avant = map.town[self.AxeY][self.AxeX]
+                map.town[self.AxeY][self.AxeX]=self
+                print(self.name," c'est cogné contre un mur")
+                return
+            elif type(self.avant)==Joueur:
+                A = self.avant.avant
+                self.avant.avant = self
+                self.avant = A
+            sleep(0.75)
+            clear()
+            map.show()
+            
+        sleep(1)
     
 
 ######## soigneur et vendeur #########################################################################################################
