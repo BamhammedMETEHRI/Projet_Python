@@ -7,7 +7,9 @@ Herbe_All = map_Class.biome(Fore.GREEN+"~"+Style.RESET_ALL,"Taux d'appiration de
 FIN = map_Class.biome("F","FIN du Jeux Merci D'avoir Jouer :)")
 Joel = Dresseur_Class.PNJ_Soigneur_Marchand("Joel",[])
 Adversaire = Dresseur_Class.PNJ_Adverse("Loupio",[])
+Adversaire2 = Dresseur_Class.PNJ_Adverse("Trodor",[])
 Adversaire.dialogue = "Je Vais te Battre !! "
+Adversaire2.dialogue = "Je vais prendre ton argent !!!"
 # print(Joel.physique)
 # print(type(Joel)== Dresseur_Class.PNJ_Soigneur_Marchand)
 
@@ -18,7 +20,7 @@ test.append_biome(FIN,0,0,1,1)
 # test.append_biome(map_Class.mur,6,5,1,1)
 # test.append_biome(map_Class.mur,5,4,1,1)
 # test.append_biome(map_Class.mur,5,6,1,1)
-
+test.Placement_Dresseur(Adversaire2,4,4)
 test.Placement_Dresseur(Adversaire,5,5)
 test.Placement_Dresseur(Joel,9,1)
 Gamer = Dresseur_Class.Joueur("Yassine",[])
