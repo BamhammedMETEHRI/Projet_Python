@@ -7,6 +7,7 @@ Herbe_All = map_Class.biome(Fore.GREEN+"~"+Style.RESET_ALL,"Taux d'appiration de
 FIN = map_Class.biome("F","FIN du Jeux Merci D'avoir Jouer :)")
 Joel = Dresseur_Class.PNJ_Soigneur_Marchand("Joel",[])
 Adversaire = Dresseur_Class.PNJ_Adverse("Loupio",[])
+Adversaire.dialogue = "Je Vais te Battre !! "
 # print(Joel.physique)
 # print(type(Joel)== Dresseur_Class.PNJ_Soigneur_Marchand)
 
@@ -22,6 +23,7 @@ Gamer.Deplacement_dans_la_Map(test)
 # print(str(type(FIN))=="<class 'map_Class.biome'>")
 
 #FINIR IV ET EV fini  FIN
-#PUIS finir les interaction avec la map (jai fais la moitier du chemin ) refaire la fonction de deplacement
+#PUIS finir les interaction avec la map 
+#(jai fais la moitier du chemin ) refaire la fonction de deplacement
 #PUIS la fonction de Combat
 #apres jaurais fini

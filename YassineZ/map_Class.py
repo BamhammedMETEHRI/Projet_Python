@@ -20,6 +20,7 @@ class Map:
                 else:
                     l.append(rien)
             self.town.append(l)
+        self.List_of_Adversaire = []
 
     def append_biome(self,element,Point_de_depart_X,Point_de_depart_Y,Longuer_Y,Largeur_X):
         if Point_de_depart_X+Largeur_X > (len(self.town[0])-2) or Point_de_depart_Y+Longuer_Y >(len(self.town)-2):
@@ -50,6 +51,12 @@ class Map:
                     for j in i:
                         if str(type(j)) == "<class 'Dresseur_Class.Joueur'>":
                             print("Il ne peut pas avoir Plus de 1 Joueur Par map")
-                Dresseur.avant= self.town[Y][X]
-            self.town[Y][X]=Dresseur
+                            return
+            Dresseur.avant= self.town[Y][X]
+            self.town[Y][X]=Dresseur 
+            Dresseur.AxeY=Y
+            Dresseur.AxeX=X
+            if str(type(Dresseur)) == "<class 'Dresseur_Class.PNJ_Adverse'>":
+                self.List_of_Adversaire.append(Dresseur)
+
 

@@ -34,6 +34,9 @@ class Dresseur:
         chaque personage aura une equipe de pokèmon
         et chaque personage aura de l'argent avec la quel on poura acheter des objet
         """
+        self.avant = ""
+        self.AxeX = None
+        self.AxeY = None
         self.name=name      #nom du dresseur 
         self.money=0        #l'argent que possède le dresseur
         self.inventaire=[]  #les objet que possède le dresseur 
@@ -75,93 +78,76 @@ class Joueur(Dresseur):
             self.PC_DU_JOUEUR.append(membre)
     #------------------------------------------------------------------
     def Deplacement_dans_la_Map(self,carte):
-        ListeOfAdversaire= []    
-        y=0
-        x=0
-        ### Pour trouver la position du Joueur
-
-        for i in range(len(carte.town)):
-            for j in range(len(carte.town[0])):
-                if str(type(carte.town[i][j])) == "<class 'Dresseur_Class.PNJ_Adverse'>":
-                    print("Y a QUELQUN !!")
-                    sleep(1)
-                    ListeOfAdversaire.append(carte.town[i][j])
-                elif type(carte.town[i][j])==Joueur:
-                    print("On as trouver la position du Joueur")
-                    sleep(1)
-                    y=i
-                    x=j
-        ### FIN
         clear()
         carte.show()
         ###Debut de la boucle while tant qu'on ne tombe pas sur Fin
         stop = True
         while stop:
             #Pour PNJ_Adverse
-            if ListeOfAdversaire != []:
-                print("il y a ",len(ListeOfAdversaire)," Adversaire attention")
+            if carte.List_of_Adversaire != []:
+                print("il y a ",len(carte.List_of_Adversaire)," Adversaire attention")
                 print("Voila leur Nom : ")
-                for z in ListeOfAdversaire:
+                for z in carte.List_of_Adversaire:
                     print(" -",z.name)
                     z.changement_de_position(1)
+                    z.vision(carte)
             #FIN
     #######################################################################################
             deplacer=input(
             "  "+Fore.LIGHTBLUE_EX+"Z"+Style.RESET_ALL+"  \n"+Fore.LIGHTGREEN_EX+"Q"+Style.RESET_ALL+" "+Fore.LIGHTMAGENTA_EX+"S"+Style.RESET_ALL+" "+Fore.LIGHTYELLOW_EX+"D"+Style.RESET_ALL+"\n"+Fore.LIGHTBLUE_EX+"Z haut"+Style.RESET_ALL+", "+Fore.LIGHTGREEN_EX+"Q a gauche"+Style.RESET_ALL+", "+Fore.LIGHTMAGENTA_EX+"S en bas "+Style.RESET_ALL+"et "+Fore.LIGHTYELLOW_EX+"D a droite "+Style.RESET_ALL+": ")
             clear()
             if deplacer == "Z":
-                y -= 1
-                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
-                    if carte.town[y][x].effect =="Stop":
+                self.AxeY -= 1
+                if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
+                    if carte.town[self.AxeY][self.AxeX].effect =="Stop":
                         print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
-                        y +=1
+                        self.AxeY +=1
                     else :
-                        carte.town[y+1][x] = self.avant
-                        self.avant = carte.town[y][x] 
+                        carte.town[self.AxeY+1][self.AxeX] = self.avant
+                        self.avant = carte.town[self.AxeY][self.AxeX] 
                 else :
-                    carte.town[y+1][x] = self.avant
-                    self.avant = carte.town[y][x] 
+                    carte.town[self.AxeY+1][self.AxeX] = self.avant
+                    self.avant = carte.town[self.AxeY][self.AxeX] 
             elif deplacer == "Q":
-                x -= 1
-                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
-                    if carte.town[y][x].effect =="Stop":
+                self.AxeX -= 1
+                if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
+                    if carte.town[self.AxeY][self.AxeX].effect =="Stop":
                         print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
-                        x +=1
+                        self.AxeX +=1
                     else :
-                        carte.town[y][x+1] = self.avant
-                        self.avant = carte.town[y][x] 
+                        carte.town[self.AxeY][self.AxeX+1] = self.avant
+                        self.avant = carte.town[self.AxeY][self.AxeX] 
                 else :
-                    carte.town[y][x+1] = self.avant
-                    self.avant = carte.town[y][x] 
+                    carte.town[self.AxeY][self.AxeX+1] = self.avant
+                    self.avant = carte.town[self.AxeY][self.AxeX] 
                     
             elif deplacer == "S":
-                y += 1
-                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
-                    if carte.town[y][x].effect =="Stop":
+                self.AxeY += 1
+                if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
+                    if carte.town[self.AxeY][self.AxeX].effect =="Stop":
                         print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
-                        y -=1
+                        self.AxeY -=1
                     else :
-                        carte.town[y-1][x] = self.avant
-                        self.avant = carte.town[y][x]
+                        carte.town[self.AxeY-1][self.AxeX] = self.avant
+                        self.avant = carte.town[self.AxeY][self.AxeX]
                 else :
-                    carte.town[y-1][x] = self.avant
-                    self.avant = carte.town[y][x] 
+                    carte.town[self.AxeY-1][self.AxeX] = self.avant
+                    self.avant = carte.town[self.AxeY][self.AxeX] 
                     
             elif deplacer == "D":
-                x += 1
-                if str(type(carte.town[y][x]))=="<class 'map_Class.biome'>":
-                    if carte.town[y][x].effect =="Stop":
+                self.AxeX += 1
+                if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
+                    if carte.town[self.AxeY][self.AxeX].effect =="Stop":
                         print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
-                        x -=1
+                        self.AxeX -=1
                     else :
-                        carte.town[y][x-1] = self.avant
-                        self.avant = carte.town[y][x]   
+                        carte.town[self.AxeY][self.AxeX-1] = self.avant
+                        self.avant = carte.town[self.AxeY][self.AxeX]   
                 else :
-                    carte.town[y][x-1] = self.avant
-                    self.avant = carte.town[y][x]    
+                    carte.town[self.AxeY][self.AxeX-1] = self.avant
+                    self.avant = carte.town[self.AxeY][self.AxeX]    
     #####################################################################################       
-            clear()
-            carte.town[y][x]=self
+            carte.town[self.AxeY][self.AxeX]=self
             carte.show()
             ######################################################################
             if str(type(self.avant))=="<class 'map_Class.biome'>":
@@ -174,9 +160,10 @@ class Joueur(Dresseur):
                     print("Fais par \n Yassine Zaoui \n Bamhammed Metehri \n Yassine Frikich \n Meliha Urlu")
                     sleep(2)
                     clear()
-            elif type(self.avant)==PNJ_Soigneur_Marchand:
+            elif type(self.avant)==PNJ_Soigneur_Marchand or type(self.avant)==PNJ_Adverse:
                 self.avant.action(self)
                 carte.show()
+            
             
 
 
@@ -190,8 +177,14 @@ class PNJ_Adverse(Dresseur):
         self.posture = 0 
         super().__init__(name, team,self.position[self.posture])
         self.money = random.randint(10,20)
-        self.deplacement = [] 
+        self.deplacement = []
     
+    def action(self,target):
+        print(self.dialogue)
+        print("Un combat commence entre ",self.name," et ",target.name)
+        sleep(2.5)
+        clear()
+
     def changement_de_position(self,bouge):
         self.posture += bouge
         if self.posture == -1:
@@ -199,10 +192,25 @@ class PNJ_Adverse(Dresseur):
         elif self.posture>=len(self.position):
             self.posture = 0
         self.physique = self.position[self.posture]
-    
-    def vision(self):
-        pass
 
+    def vision(self,map):
+        for y in range (len(map.town)):
+            for x in range (len(map.town[0])):
+                if type(map.town[y][x])==Joueur:   
+                    if  x<self.AxeX and y==self.AxeY and self.physique == self.position[1]:
+                        print("Je te Vois HAHAHA tu es a gauche")
+                        break
+                    elif y<self.AxeY and x==self.AxeX and self.physique == self.position[2]:
+                        print("Je te Vois HAHAHA tu es en Haut")
+                        break
+                    elif x>self.AxeX and y==self.AxeY and self.physique == self.position[3]:
+                        print("Je te Vois HAHAHA tu es a Droite")
+                        break
+                    elif y>self.AxeY and x==self.AxeX and self.physique == self.position[0]:
+                        print("Je te Vois HAHAHA tu es en Bas !!")
+                        break
+
+            
     
 
 ######## soigneur et vendeur #########################################################################################################
