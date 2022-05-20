@@ -1,5 +1,5 @@
-#crée la classe des dresseur toute les entité ( se sont des dresseur de pokèmon) non pokèmon #
-#ici ou je teste mes class
+#crée la class des dresseurs, toute les entités ( se sont des dresseur de pokèmon) et non des pokèmons #
+#ici où je teste mes class
 # import only system from os
 from os import system, name
 # import sleep to show output for some time period
@@ -23,23 +23,23 @@ def clear():
 ####### le parent de tout les pnj et joueur ##########################################################################################################
 class Dresseur:
     """
-    La classe Dresseur sera le parent de tout les 
-    Personage (sauf les Pokèmons) 
+    La class Dresseur sera le parent de tout les 
+    Personnage (sauf les Pokèmons) 
     """
     def __init__(self,name,team,physique):
         """
-        chaque personage aura
-        un inventaire (potion et pokeball et autre peut etre)
+        chaque personnage aura
+        un inventaire (potion et pokeball ...)
         name le nom
-        chaque personage aura une equipe de pokèmon
-        et chaque personage aura de l'argent avec la quel on poura acheter des objet
+        chaque personnage aura une équipe de pokèmon
+        et chaque personnage aura de l'argent avec laquel on poura acheter des objets
         """
         self.avant = ""
         self.AxeX = None
         self.AxeY = None
         self.name=name      #nom du dresseur 
         self.money=0        #l'argent que possède le dresseur
-        self.inventaire=[]  #les objet que possède le dresseur 
+        self.inventaire=[]  #les objets que possède le dresseur 
         self.team= team     #l'equipe du dresseur qui sera une liste de 6
         self.dialogue= ""   #chaque dresseur aura une boite de dialogue
         self.physique = physique  #a quoi ressemblera le personnage sur la carte.town
@@ -55,19 +55,19 @@ class Dresseur:
 ######### celui qui va jouer ########################################################################################################
 class Joueur(Dresseur):
     """
-    ce si est la classe du joueur qui jouera
+    ce si est la class du joueur qui jouera
     """
 
     def __init__(self, name, team):
-        self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son equipe
+        self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son équipe
         self.avant = "" #Pour le deplacement
         super().__init__(name, team,Fore.WHITE+'H'+Style.RESET_ALL)# il sera en H pour Hero
         
     #------------------------------------------------------------------
     def afficher_PC(self):
         """
-        affiche tout les pokèmon que le joueur à attraper et 
-        qui ne sont pas dans son equipe
+        affichage de tout les pokèmons que le joueur à attraper et 
+        qui ne sont pas dans son équipe
         """
         for i in range(len(self.PC_DU_JOUEUR)):
             print("id ",i,", nom ",self.Boite[i].name)
@@ -75,19 +75,19 @@ class Joueur(Dresseur):
     def ajouter_membre(self,membre):
         """
         La fonction qui permet de rajouter 
-        les pokèmon dans l'equipe du joueur
+        les pokèmon dans l'équipe du joueur 
         """
         membre.sauvage = False
         if len(self.team)<6:
             self.team(membre)
         else:
-            print("Votre equipe est complète votre pokèmon sera dans le PC")
+            print("Votre équipe est complète votre pokèmon sera stocker dans le PC")
             self.PC_DU_JOUEUR.append(membre)
     #------------------------------------------------------------------
     def Deplacement_dans_la_Map(self,carte):
         clear()
         carte.show()
-        ###Debut de la boucle while tant qu'on ne tombe pas sur Fin
+        ###Début de la boucle while tant qu'on ne tombe pas sur Fin
         stop = True
         while stop:
             #Pour PNJ_Adverse
@@ -107,7 +107,7 @@ class Joueur(Dresseur):
                 self.AxeY -= 1
                 if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
                     if carte.town[self.AxeY][self.AxeX].effect =="Stop":
-                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        print("Aie !! un Mur tu ne peux pas aller plus loin faite demi-tour")
                         self.AxeY +=1
                     else :
                         carte.town[self.AxeY+1][self.AxeX] = self.avant
@@ -119,7 +119,7 @@ class Joueur(Dresseur):
                 self.AxeX -= 1
                 if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
                     if carte.town[self.AxeY][self.AxeX].effect =="Stop":
-                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        print("Aie !!! un Mur tu ne peux pas aller plus loin faite demi-tour")
                         self.AxeX +=1
                     else :
                         carte.town[self.AxeY][self.AxeX+1] = self.avant
@@ -132,7 +132,7 @@ class Joueur(Dresseur):
                 self.AxeY += 1
                 if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
                     if carte.town[self.AxeY][self.AxeX].effect =="Stop":
-                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        print("Aie !!! un Mur tu ne peux pas aller plus loin faite demi-tour")
                         self.AxeY -=1
                     else :
                         carte.town[self.AxeY-1][self.AxeX] = self.avant
@@ -145,7 +145,7 @@ class Joueur(Dresseur):
                 self.AxeX += 1
                 if str(type(carte.town[self.AxeY][self.AxeX]))=="<class 'map_Class.biome'>":
                     if carte.town[self.AxeY][self.AxeX].effect =="Stop":
-                        print("Aie un Mur tu ne peux pas aller par la dcp tu ne bouge pas")
+                        print("Aie !!! un Mur tu ne peux pas aller plus loin faite demi-tour")
                         self.AxeX -=1
                     else :
                         carte.town[self.AxeY][self.AxeX-1] = self.avant
@@ -323,15 +323,15 @@ class PNJ_Adverse(Dresseur):
 ######## soigneur et vendeur #########################################################################################################
 class PNJ_Soigneur_Marchand(Dresseur):
     """
-    Se sont des Pnj qui permet de soigné les pokémon du joueur et de vendre
-    des pokèball et des potion
+    Se sont des Pnj qui permet de soigné les pokémons du joueur et de vendre
+    des pokèballs et des potions
     """
     def __init__(self, name, team):
         super().__init__(name, team,Fore.BLUE+"♡"+Style.RESET_ALL)
-        self.inventaire=[Item("Potion",""),Item("Poké ball","pokeball")]
+        self.inventaire=[Item("Potion",""),Item("Pokéball","pokeball")]
     
     def action(self,target):
-        print("Bonjour je suis ",self.name," je peux soignier tout t'es pokemon ou vendre des objet qui peuvent t'aider")
+        print("Bonjour je suis ",self.name," je peux soignier tout t'es pokèmon où vendre des objets qui peuvent t'aider")
         choix = input("1- Soigner \n2-Comercer \n3-Quiter\n")
         while choix != "3":
             clear()
@@ -339,13 +339,13 @@ class PNJ_Soigneur_Marchand(Dresseur):
                 self.comercer(target)
             elif choix =="1":
                 self.health(target)
-            choix = input("1- Soignier \n2-Comercer \n3-Quite\n")
+            choix = input("1- Soignier \n2-Commercer \n3-Quitter\n")
             clear()
     
     #------------------------------------------------------------------
     def health(self,target):
         """
-        fonction qui permet de soigner les pokemon de target
+        fonction qui permet de soigner les pokèmons de target
         """
         if len(target.team)>0 and str(type(target.team[0]))=="<class '__main__.Pokemon'>":
                 for i in target.team:
@@ -364,16 +364,16 @@ class PNJ_Soigneur_Marchand(Dresseur):
 
     def comercer(self,target):
         """
-        fonction qui permet de faire du comerce avec target
+        fonction qui permet de faire du commerce avec target
         """
-        Choix0 = input("1.Acheter 2.Vendre 3.Quiter\n")
+        Choix0 = input("1.Acheter 2.Vendre 3.Quitter\n")
         if Choix0 == "1" :
             clear()
             print("Voila ce que je vend")
             for i in range(len(self.inventaire)):
                 print("id ",i,"| nom ",self.inventaire[i].name," , prix : ",self.inventaire[i].prix)
             print("\ntu as ",self.money,"€\n")
-            Choix = int(input("que shouaite tu acheter? : "))
+            Choix = int(input("que souhaite tu acheter ? : "))
             if self.inventaire[Choix].prix <= target.money:
                 target.money -= self.inventaire[Choix].prix
                 target.inventaire.append(self.inventaire[Choix])
@@ -386,11 +386,11 @@ class PNJ_Soigneur_Marchand(Dresseur):
             else:
                 for i in (target.inventaire):
                     print("id ",i," nom ",self.inventaire[i].name," prix",self.inventaire[i].prix)
-                Choix = int(input("que shouaite tu vendre? : "))
+                Choix = int(input("que souhaite tu vendre? : "))
                 target.money += target.inventaire[Choix].prix
                 target.inventaire.pop(Choix)
         elif Choix0 == "3" :
-            print("Au revoir :)")
+            print("Au revoir :) ")
             clear()
             return
         else : 

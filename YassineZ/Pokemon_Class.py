@@ -86,13 +86,14 @@ def Calcule_State_HP(Base,IV,EV,NIV):
 def Calcule_Sate(Base,IV,EV,NIV):
         State = ((2*Base+IV+(EV/4))*NIV)+5
         return round(State*1000)/1000
-
+#0 1 2 3 4 5 6 7 8 9 10 11 12 
+Liste_de_Cran = [2/8,2/7,2/6,2/5,2/4,2/3,2/2,3/2,4/2,5/2,6/2,7/2,8/2]
 
 Liste_de_Pokemon = []
 #definir un pokemon il est composé de quoi comme variable 
 class Pokemon:
     def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture) :
-        self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut paschanger ....
+        self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut pas changer ....
         self.Espece = name              #...l'espece du Pokemon fix qui est fixe 
         self.type= Type                 #peut avoir 2 ou 1 type [str]
         self.competence= competence        #peut entre 1 et avoir max 4 Mouv et chaque Mouv à un nombre de pp et un type [ataque]
@@ -134,6 +135,12 @@ class Pokemon:
         self.Defense = self.Defense_full
         self.DefenseSPE = self.DefenseSPE_full
         self.Speed = self.Speed_full
+############################################################################################################################# cran pour le boust de state
+        self.Cran_Attack =0
+        self.Cran_AttackSPE =0
+        self.Cran_Defense = 0
+        self.Cran_DefenseSPE =0
+        self.Cran_Speed = 0
 #fin
         self.statu = []
         self.Taux_De_Capture = Taux_De_Capture
@@ -318,8 +325,57 @@ class Pokemon:
         self.Level = Level
         self.All_Variable["Level"] = self.Level
         self.update()
-        
-
+    
+    def Changement_de_Cran(self,state,changement):
+        if state ==  "Attaque" :
+            self.Cran_Attack +=changement
+            if self.Cran_Attack >=6:
+                self.Cran_Attack = 6
+                print("Les States son boosté en max")
+            elif self.Cran_Attack <=-6:
+                self.Cran_Attack = -6
+                print("Les States son diminuer au maximume")
+        elif state == "AttaqueSPE":
+            self.Cran_AttackSPE += changement
+            if self.Cran_AttackSPE >=6:
+                self.Cran_AttackSPE = 6
+                print("Les States son boosté en max")
+            elif self.Cran_AttackSPE <=-6:
+                self.Cran_AttackSPE = -6
+                print("Les States son diminuer au maximume")
+        elif state == "Defense":
+            self.Cran_Defense += changement
+            if self.Cran_Defense >=6:
+                self.Cran_Defense = 6
+                print("Les States son boosté en max")
+            elif self.Cran_Defense <=-6:
+                self.Cran_Defense = -6
+                print("Les States son diminuer au maximume")
+        elif state == "DefenseSPE":
+            self.Cran_DefenseSPE += changement
+            if self.Cran_DefenseSPE >=6:
+                self.Cran_DefenseSPE = 6
+                print("Les States son boosté en max")
+            elif self.Cran_DefenseSPE <=-6:
+                self.Cran_DefenseSPE = -6
+                print("Les States son diminuer au maximume")
+        elif state == "Speed":
+            self.Cran_Speed += changement
+            if self.Cran_Speed >=6:
+                self.Cran_Speed = 6
+                print("Les States son boosté en max")
+            elif self.Cran_Speed <=-6:
+                self.Cran_Speed = -6
+                print("Les States son diminuer au maximume")
+        else:
+            print("tu as selectioner une mauvaise state")
+    
+    def Changement_de_State(self):
+        self.Attack = Calcule_Sate(self.State_Base_Attack,self.IV_Att,self.EV_Att,self.Level)* Liste_de_Cran[self.Cran_Attack+6]
+        self.AttackSPE =Calcule_Sate(self.State_Base_AttackSPE,self.IV_AttSPE,self.EV_AttSPE,self.Level)*Liste_de_Cran[self.Cran_AttackSPE+6]
+        self.Defense = Calcule_Sate(self.State_Base_Def,self.IV_Def,self.EV_Def,self.Level)*Liste_de_Cran[self.Defense+6]
+        self.DefenseSPE =Calcule_Sate(self.State_Base_DefSPE,self.IV_DefSPE,self.EV_DefSPE,self.Level)*Liste_de_Cran[self.DefenseSPE+6]
+        self.Speed = Calcule_Sate(self.State_Base_Speed,self.IV_Speed,self.EV_Speed,self.Level)*Liste_de_Cran[self.Speed+6]
 
 Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir
 
@@ -346,3 +402,4 @@ def afficher_Liste_Pokemon():
 # print()
 # Aficher_Matrice_Des_Type()
 
+machin = Pokemon("trololo",["Normal"],)

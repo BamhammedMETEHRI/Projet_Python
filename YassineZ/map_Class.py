@@ -44,7 +44,7 @@ class Map:
         X+=1
         Y+=1
         if X<=0 or Y<=0 or X>=len(self.town[0])-1 or Y>=len(self.town)-1:
-            print("Lime de Terrain vous ne pouvez pas le plasser")
+            print("Limite de Terrain vous ne pouvez pas le placer")
         else :
             if str(type(Dresseur)) == "<class 'Dresseur_Class.Joueur'>":
                 for i in self.town:

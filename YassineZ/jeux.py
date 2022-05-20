@@ -3,8 +3,8 @@ from colorama import Fore
 from colorama import Style
 
 ###################### creation de biome
-Herbe_All = map_Class.biome(Fore.GREEN+"~"+Style.RESET_ALL,"Taux d'appiration de tout les pokèmon egaux")
-FIN = map_Class.biome("F","FIN du Jeux Merci D'avoir Jouer :)")
+Herbe_All = map_Class.biome(Fore.GREEN+"~"+Style.RESET_ALL,"Taux d'apparition de tout les pokèmons égaux")
+FIN = map_Class.biome("F","FIN du Jeux Merci D'avoir Jouer :) ")
 Joel = Dresseur_Class.PNJ_Soigneur_Marchand("Joel",[])
 Adversaire = Dresseur_Class.PNJ_Adverse("Loupio",[])
 Adversaire2 = Dresseur_Class.PNJ_Adverse("Trodor",[])
