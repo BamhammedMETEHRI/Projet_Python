@@ -23,27 +23,37 @@ def mettre_music(chemin,music=None):
     pygame.display.flip()
     return music
 generique = 'music\generique.wav'
-combat_dresseur= "music\combat_dresseur.wav"
-combat_pokemon = "music\combat_pokemon.wav"
+combat_pokemon= "music\combat_dresseur.wav"
+combat_dresseur = "music\combat_pokemon.wav"
 route00 = "music\port_pokemon.wav"
 route01 = "music\\route_228.wav"
 a =None
-a =mettre_music(generique,a)
-sleep(1)
-a =mettre_music(combat_dresseur,a)
-sleep(1)
-a=mettre_music(combat_pokemon,a)
-sleep(1)
-a=mettre_music(route00,a)
-sleep(1)
-a=mettre_music(route01,a)
-
+# a =mettre_music(generique,a)
+# sleep(1)
+# a =mettre_music(combat_dresseur,a)
+# sleep(1)
+# a=mettre_music(combat_pokemon,a)
+# sleep(1)
+# a=mettre_music(route00,a)
+# sleep(1)
+# a=mettre_music(route01,a)
 while launched:
-    stop = ""
-    if stop != "":
+
+    stop= input("envoie rien pour stoper ou une chiffre entre 1 et 5 pour choisir ta musique : ")
+    if stop == "":
         launched = False
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            launched= False
+    elif stop == "1":
+        a =mettre_music(generique,a)
+    elif stop == "2":
+        a =mettre_music(combat_dresseur,a)
+    elif stop == "3":
+        a=mettre_music(combat_pokemon,a)
+    elif stop == "4":
+        a=mettre_music(route00,a)
+    elif stop == "5":
+        a=mettre_music(route01,a)
+    # for event in pygame.event.get():
+    #     if event.type == pygame.QUIT:
+    #         launched= False
 
             
