@@ -27,6 +27,7 @@ combat_pokemon= "music\combat_dresseur.wav"
 combat_dresseur = "music\combat_pokemon.wav"
 route00 = "music\port_pokemon.wav"
 route01 = "music\\route_228.wav"
+Prof = "music\\Professor.wav"
 a =None
 # a =mettre_music(generique,a)
 # sleep(1)
@@ -52,8 +53,8 @@ while launched:
         a=mettre_music(route00,a)
     elif stop == "5":
         a=mettre_music(route01,a)
+    elif stop=="6":
+        a=mettre_music(Prof,a)
     # for event in pygame.event.get():
     #     if event.type == pygame.QUIT:
     #         launched= False
-
-            

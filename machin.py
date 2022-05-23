@@ -1,3 +1,8 @@
-import YassineZ.map_Class
-
-print(type(YassineZ.map_Class.mur))
+while True:
+    try :
+        p = int(input("lk,fkmetj : "))
+        print("ok")
+        print(p)
+        break
+    except ValueError:
+        print("no")

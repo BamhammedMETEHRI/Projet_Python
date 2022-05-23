@@ -50,6 +50,13 @@ class Dresseur:
                 if map.town[i][j]==self:
                     return i,j
         print("on as rien trouver")
+    
+    def Perdu(self):
+        for i in self.team:
+            if i.HP > 0:
+                return True
+        print(self.name," a Perdu !")
+        return False
 
 
 ######### celui qui va jouer ########################################################################################################
@@ -355,6 +362,8 @@ class PNJ_Soigneur_Marchand(Dresseur):
                     i.Defense = i.Defense_full
                     i.DefenseSPE = i.DefenseSPE_full
                     i.Speed = i.Speed_full
+                    for j in i.competence:
+                        j.PP = j.full_PP
                     print(i.name," Est soignier :)")
                     sleep(1)
         else:

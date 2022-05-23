@@ -3,6 +3,7 @@ from colorama import Fore
 from colorama import Style
 import Mouv_Class
 import random
+import math
 
 # colorama.init()
 # print(Fore.BLUE + Style.BRIGHT + "This is the color of the sky" + Style.RESET_ALL)
@@ -98,7 +99,7 @@ class Pokemon:
     def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture) :
         self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut pas changer ....
         self.Espece = name              #...l'espece du Pokemon fix qui est fixe 
-        self.type= Type                 #peut avoir 2 ou 1 type [str]
+        self.Type= Type                 #peut avoir 2 ou 1 type [str]
         self.competence= competence        #peut entre 1 et avoir max 4 Mouv et chaque Mouv à un nombre de pp et un type [ataque]
         self.Level = 1
         self.Exp=0
@@ -155,7 +156,7 @@ class Pokemon:
         self.sauvage = sauvage  #bool True = il est sauvage , False = il est capturè
         Liste_de_Pokemon.append(self)
         self.All_Variable = {
-            "name":self.name,"Espece":self.Espece,"type":self.type,"competence":self.competence,"Level":self.Level,"Experience":self.Exp,
+            "name":self.name,"Espece":self.Espece,"type":self.Type,"competence":self.competence,"Level":self.Level,"Experience":self.Exp,
             "State Base HP":self.State_Base_HP,"IV HP":self.IV_HP,"EV HP":self.EV_HP,"HP full":self.HP_full,"HP":self.HP,
             "State base Attack":self.State_Base_Attack,"IV Att":self.IV_Att,"EV Att":self.EV_Att,"Attack full":self.Attack_full,"Attack":self.Attack,
             "State base AttackSPE":self.State_Base_AttackSPE,"IV AttSPE":self.IV_AttSPE,"EV AttSPE":self.EV_AttSPE,"AttackSPE full":self.AttackSPE_full,"AttackSPE":self.AttackSPE,
@@ -435,22 +436,27 @@ class Pokemon:
 #######################################################################"
     def Barre_HP(self):
         Barre = ""
-        Nombre_de_barre = (self.HP * 20) // self.HP_full
+        Nombre_de_barre = (self.HP * 20) / self.HP_full
+        Nombre_de_barre = math.ceil(Nombre_de_barre)
         for _ in range (int(Nombre_de_barre)) :
             Barre += "-"
-        for i in self.type:
+        for i in self.Type:
             print(i,end=" | ")
+        print(Fore.LIGHTCYAN_EX+"NIV ",self.Level,Style.RESET_ALL)
         print(self.name,end=": ")
+        blabla = ""
+        if self.statu != None:
+            blabla= self.statu.name
         if Nombre_de_barre<=0:
             return "D"
         elif Nombre_de_barre <= 5 :
-            print(Fore.RED+Barre+Style.RESET_ALL)
+            print(Fore.RED+Barre+Style.RESET_ALL+" "+blabla)
             return "L"
         elif Nombre_de_barre <= 10 :
-            print(Barre)
+            print(Barre+" "+blabla)
             return "MI"
         else :
-            print(Fore.GREEN + Barre + Style.RESET_ALL)
+            print(Fore.GREEN + Barre + Style.RESET_ALL+" "+blabla)
             return "MA"
 
     def All_Mouv(self):
