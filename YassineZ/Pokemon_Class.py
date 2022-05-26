@@ -3,8 +3,18 @@ from colorama import Fore
 from colorama import Style
 import Mouv_Class
 import random
+from time import sleep
 import math
-
+from os import system, name
+def clear():
+  
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+  
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
 # colorama.init()
 # print(Fore.BLUE + Style.BRIGHT + "This is the color of the sky" + Style.RESET_ALL)
 # print(Fore.GREEN + "This is the color of grass" + Style.RESET_ALL)
@@ -14,6 +24,9 @@ import math
 # print(len(Fore.BLUE+Style.RESET_ALL))
 # print(len(Fore.BLUE + Style.DIM +Style.RESET_ALL))
 #La classe des pokèmon 
+dessin00 ="               .-. \_/ .-.\n               \.-\/=\/.-/\n            '-./___|=|___\.-'\n           .--| \|/`\"`\|/ |--.\n          (((_)\  :____:  /(_)))\n           `\ \_`-.   .-'_/ /`_\n             '.__       __.'(_))\n                 /     \     //\n                |       |__.'/\n                \       /--'`\n            .--,-' .--. '----.\n           '----`--'  '--`----'"
+asscie = []
+asscie.append(dessin00)
 Efficace = 2
 
 Pas_Efficace = 1/2
@@ -166,6 +179,43 @@ class Pokemon:
             "statu":self.statu,"Taux De Capture":self.Taux_De_Capture,"Esquive":self.Esquive,"Precision":self.Precision,"dialogue":self.dialogue,"sauvage":self.sauvage
         }
     
+    def Info_Pokemon(self):
+        a= asscie[random.randint(1,len(asscie))-1]
+        print("INFO DU POKEMON ",self.name," : ")
+        print(a)
+        print("Espece : ",self.Espece,end="")
+        print(" | TYPE   : ",self.Type[0],end="")
+        if len(self.Type)>=2:
+            print(", ",self.Type[1],end="")
+        print()
+        print("NIV = ",self.Level,"         | PV     = ",self.HP," / ",self.HP_full)
+        print("ATK = ",self.Attack,"     | ATKspe =",self.AttackSPE)
+        print("DEF = ",self.Defense,"     | DEFspe =",self.DefenseSPE)
+        print("SPEED = ",self.Speed)
+        input("apuie sur entrée pour voir les info sur ces attaque ")
+        clear()
+        print("Structure des competence :\n\nNom du pokemon \" representation non contractuel du pokemon \"\n\nID. Nom de l'attaque : \n-Type\n-Sa Puissance\n-PP : Nombre de PP Actuel/ Nombre de PP Max\n-Class de l'attaque si elle utilise les states spe ou normal ou aucune\n-Sa cible\n-description\n  - Nom de l'effect \n  - description de l'effet")
+        input("apuie sur entrée pour voir les info sur ces attaque ")
+        clear()
+        print("INFO DES COMPETENCE DE ",self.name," : ")
+        print(a)
+        for i in range(4):
+            if i> len(self.competence)-1:
+                print("ID ",i+1,". PAS DE COMPETENCE")
+            else:
+                print("ID ",i+1,". ",self.competence[i].name,"\n  - Type : ",self.competence[i].Type)
+                print("  - Puissance : ",self.competence[i].Puissance)
+                print("  -PP : ",self.competence[i].PP,' / ',self.competence[i].full_PP)
+                print("  -C'est une attaque : ",self.competence[i].Class)
+                print("  -Cible : ",self.competence[i].target)
+                print("Description : ",self.competence[i].description)
+                if self.competence[i].Effect != None:
+                    print("    -Nom d'effect : ",self.competence[i].Effect.name)
+                    print("    -description effect : ",self.competence[i].Effect.description)
+                print()
+        sleep(10)
+        
+
 
     def afficher_state(self):
         debut=False
@@ -276,7 +326,7 @@ class Pokemon:
         self.IV_AttSPE = random.randint(0,31)
         self.IV_Def = random.randint(0,31)
         self.IV_DefSPE = random.randint(0,31)
-        self.Speed = random.randint(0,31)
+        self.IV_Speed = random.randint(0,31)
         ###################################################""
         self.All_Variable["IV HP"] = self.IV_HP
         self.All_Variable["IV Att"]= self.IV_Att
@@ -472,6 +522,11 @@ class Pokemon:
                 print("| PP : ",self.competence[i].PP," | ",self.competence[i].Type)
             else:
                 print("ID:",i+1," .")
+
+    def New_Pokemon_same_espece(self):
+        a=Pokemon(self.name,self.Type,self.competence,self.sauvage,self.HP,self.Attack,self.Defense,self.AttackSPE,self.DefenseSPE,self.Speed,self.Taux_De_Capture)
+        a.IV_Make()
+        return a
 
             
 # Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir

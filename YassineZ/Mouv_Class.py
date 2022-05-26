@@ -1,6 +1,7 @@
 import math
 import random
 from time import sleep
+
 #La class Mouv permet de donner des mouv    au pokèmon#
 Liste_Type = ["Normal","Feu","Eau","Plante","Électrik","Glace","Combat","Poison","Sol","Vol","Psy","Insecte","Roche","Spectre"]
 
@@ -238,11 +239,11 @@ def pourcent1sur10():
 #Nome Type Class Precision Puissance Effect
 #effet
 attaque_baisse = Effect("l'attaque baisse","L'attaque du Joueur adverse baisse d'un Cran")
-Brule1sur10 = Effect("bruler","10%\ de bruler",pourcent1sur10,random.randint(3,4)) 
+Brule1sur10 = Effect("bruler","le Joueur ayant ce statu perds 1 / 16 de ces pv complet",pourcent1sur10,random.randint(5,7)) 
 
 #attaque
 rugissement = Mouv("rugissement","Normal",2,100,40,None,attaque_baisse,"Le lanceur pousse un cri tout mimi pour tromper la vigilance de l'ennemi et baisser son Attaque.")
 charge = Mouv("charge","Normal",0,100,35,50,None,"Le lanceur charge l'ennemi et le percute de tout son poids.")
-flameche = Mouv("Flammèche","Feu",1,100,25,40,Brule1sur10,"L'ennemi est attaqué par une faible flamme. Peut aussi le brûler.",None)
+flameche = Mouv("Flammèche","Feu",1,100,25,40,Brule1sur10,"L'ennemi est attaqué par une faible flamme. Peut aussi le brûler. (proba : 1 sur 10 l'attaque dur entre 5 et 7 tour)",None)
 Griffe = Mouv("Griffe","Normal",0,100,35,40,None,"Lacère l'ennemi avec des griffes acérées pour lui infliger des dégâts.")
 # charge.afficher_element()

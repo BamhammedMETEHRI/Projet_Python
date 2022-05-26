@@ -8,7 +8,7 @@ from colorama import Fore
 from colorama import Style
 import random
 
-from Item_Class import Item
+import Item_Class 
 
 def clear():
   
@@ -51,6 +51,41 @@ class Dresseur:
                     return i,j
         print("on as rien trouver")
     
+    def affichage_Item(self):
+        
+        max=[]
+        for i in range(len(Item_Class.all_Object)):
+            nbr = 0
+            for j in self.inventaire :
+                if Item_Class.all_Object[i] == j :
+                    nbr += 1
+            if nbr>0:
+                max.append(i+1)
+                print(Fore.LIGHTRED_EX+"Id "+str(i+1)+Style.RESET_ALL+"\nNom : ",Item_Class.all_Object[i].name,"\nNBR d'exemplaire : ",nbr,"\nDescription : ",Item_Class.all_Object[i].description,"\n")
+        return max
+    
+    def selection_Item(self):
+        while True:
+            try:
+                max =self.affichage_Item()
+                choix = int(input("----------------------------------------------------\n\nselectionai l'"+Fore.LIGHTRED_EX+"ID"+Style.RESET_ALL+" de l'objet que vous voulez choisir OU 0 pour retourner en arriere\nChoix = "+Fore.LIGHTRED_EX+""))
+                print(""+Style.RESET_ALL+"")
+                if choix==0 :
+                    return choix
+                elif choix in max:
+                    for i in range(len(self.inventaire)) :
+                        if self.inventaire[i].name == Item_Class.all_Object[choix-1].name:
+                            obj = self.inventaire.pop(i)
+
+                            return obj
+
+                else:
+                    clear()
+            except ValueError:
+                clear()
+
+
+
     def Perdu(self):
         for i in self.team:
             if i.HP > 0:
@@ -69,7 +104,7 @@ class Joueur(Dresseur):
         self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son équipe
         self.avant = "" #Pour le deplacement
         super().__init__(name, team,Fore.WHITE+'H'+Style.RESET_ALL)# il sera en H pour Hero
-        
+    
     #------------------------------------------------------------------
     def afficher_PC(self):
         """
@@ -85,11 +120,17 @@ class Joueur(Dresseur):
         les pokèmon dans l'équipe du joueur 
         """
         membre.sauvage = False
+        Nom= input("Veut tu donner un nom a ce pokemon ?? ")
+        if Nom != "":
+            membre.name = Nom
+            print(membre.Espece," s'apelle a present ",membre.name)
+            sleep(2)
         if len(self.team)<6:
-            self.team(membre)
+            self.team.append(membre)
         else:
             print("Votre équipe est complète votre pokèmon sera stocker dans le PC")
             self.PC_DU_JOUEUR.append(membre)
+            sleep(2)
     #------------------------------------------------------------------
     def Deplacement_dans_la_Map(self,carte):
         clear()
@@ -335,7 +376,7 @@ class PNJ_Soigneur_Marchand(Dresseur):
     """
     def __init__(self, name, team):
         super().__init__(name, team,Fore.BLUE+"♡"+Style.RESET_ALL)
-        self.inventaire=[Item("Potion",""),Item("Pokéball","pokeball")]
+        self.inventaire= Item_Class.all_Object
     
     def action(self,target):
         print("Bonjour je suis ",self.name," je peux soignier tout t'es pokèmon où vendre des objets qui peuvent t'aider")
