@@ -14,6 +14,7 @@ from time import sleep
 from colorama import Fore
 from colorama import Style
 import Dresseur_Class, Pokemon_Class,map_Class,Mouv_Class,Item_Class
+from YassineZ.Mouv_Class import Mouv
 
 def clear():
   
@@ -57,7 +58,9 @@ CAPTURE_SUCCES="\n                \n            \n    _M____M_       * *\n   /²
 
 # ☐ ■
 PKSauvage = Pokemon_Class.Liste_de_Pokemon[random.randint(0,len(Pokemon_Class.Liste_de_Pokemon)-1)].New_Pokemon_same_espece()
+PKSauvage.competence=[Mouv_Class.charge]
 Salameche_du_Joueur = Pokemon_Class.Salameche.New_Pokemon_same_espece()
+Salameche_du_Joueur.competence= [Mouv_Class.charge,Mouv_Class.Vive_attaque,Mouv_Class.Griffe,Mouv_Class.rugissement]
 Salameche_du_Joueur.sauvage = False
 moi = Dresseur_Class.Joueur("Yassine",[Salameche_du_Joueur])
 moi.inventaire.append(Item_Class.potion_normal) 

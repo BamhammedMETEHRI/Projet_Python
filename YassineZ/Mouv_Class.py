@@ -503,7 +503,7 @@ Poison1sur4 = Effect("Empoisoner","le Joueur est empoisonne il perd 1 16iem de c
 Poison1sur3 = Effect("Empoisoner","le Joueur est empoisonne il perd 1 16iem de ces pv",pourcent1sur3,random.randint(6,8))
 AutoDestrucion= Effect("AUTO KO","Le pokemon se tue lui meme",None,None,"self")
 precision_baisse1 = Effect("la Precision baisse","baisse la precision du joueur d'un' cran",None,"self")
-#CREATION attaque
+#######################################################CREATION attaque
 charge = Mouv("charge","Normal",0,100,35,50,None,"Le lanceur charge l'ennemi et le percute de tout son poids.")
 Vive_attaque=Mouv("Vive-attaque","Normal",0,100,30,40,Priority,"Le lanceur fonce sur l'ennemi si rapidement qu'on parvient à peine à le discerner. Frappe en priorité.")
 Griffe = Mouv("Griffe","Normal",0,100,35,40,None,"Lacère l'ennemi avec des griffes acérées pour lui infliger des dégâts.")
@@ -553,7 +553,9 @@ Amnesie = Mouv("Amnésie","Psy",2,100000,20,None,defensespe_augment2,"Le lanceur
 Psyko = Mouv("Psyko","Psy",1,100,10,90,defensespe_baisse1_1sur10,"Une puissante force télékinétique frappe l'ennemi. Peut aussi faire baisser sa Défense Spéciale.")
 Secretation = Mouv("Sécrétion","Insect",2,95,40,None,vitesse_baisse1,"Le lanceur crache de la soie pour ligoter l'ennemi et beaucoup baisser sa Vitesse.")
 JetPierre = Mouv("Jet-Pierres","Roche",0,90,15,50,None,"Le lanceur lâche une pierre sur l'ennemi.")
-
+FouetLianes = Mouv("Fouet Lianes","Plante",0,100,25,45,None,"Fouette l'ennemi avec de fines lianes pour infliger des dégâts.")
+Lechouille = Mouv("Léchouille","Spectre",0,100,30,30,parylyse1sur3,"Un grand coup de langue qui inflige des dégâts à l'ennemi. Peut aussi le paralyser.")
+Hypnose = Mouv("Hypnose","Psy",2,60,20,None,Dodo,"Le lanceur hypnotise l'ennemi pour le plonger dans un profond sommeil.")
 # charge.afficher_element()
 AllCompetence = [
     Liste_attaque_Normal,

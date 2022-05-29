@@ -8,6 +8,7 @@ import random
 from time import sleep
 import math
 from os import system, name
+
 def clear():
   
     # for windows
@@ -615,9 +616,13 @@ def has_key(Dic,key):
 
 def attaque_aleatoire():
     L=[]
-    for _ in range(4):
+    for i in range(4):
         c = Mouv_Class.AllCompetence[random.randint(0,len(Mouv_Class.AllCompetence)-1)]
-        c = c[random.randint(0,len(c)-1)]
+        # print(c)
+        # sleep(3)
+        c=c[random.randint(0,len(c)-1)]
+        # print(c)
+        # sleep(3)
         if L ==[]:
             L.append(c.Newattaque())
         else:
@@ -627,52 +632,53 @@ def attaque_aleatoire():
             L.append(c.Newattaque())
     return L
 ###########Normal
-Persian = Pokemon('Persian',["Normal"],attaque_aleatoire(),True,65,70,60,65,65,115,90,None,None)
-Miaouss = Pokemon("Miaouss",["Normal"],attaque_aleatoire(),True,40,45,35,40,40,90,255,None,(15,Persian.New_Pokemon_same_espece()))
+Persian = Pokemon('Persian',["Normal"],[Mouv_Class.Griffe.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,65,70,60,65,65,115,90,{12:Mouv_Class.Morsure.Newattaque(),17:Mouv_Class.Jackpot.Newattaque(),24:Mouv_Class.CombotGriffe.Newattaque(),44:Mouv_Class.Tranche.Newattaque()},None)
+Miaouss = Pokemon("Miaouss",["Normal"],[Mouv_Class.Griffe.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,40,45,35,40,40,90,255,{12:Mouv_Class.Morsure.Newattaque(),17:Mouv_Class.Jackpot.Newattaque(),24:Mouv_Class.CombotGriffe.Newattaque(),44:Mouv_Class.Tranche.Newattaque()},(15,Persian.New_Pokemon_same_espece()))
 ###########FEUX
-Dracaufeu = Pokemon("Dracaufeu",["Feu","Vol"],attaque_aleatoire(),True,78,84,78,109,85,100,45,None,None)
-Reptincel  = Pokemon('Reptincel',["Feu"],attaque_aleatoire(),True,58,64,58,80,65,80,45,None,(30,Dracaufeu.New_Pokemon_same_espece()))
-Salameche = Pokemon("Salameche",["Feu"],attaque_aleatoire(),True,39,52,43,60,50,65,45,None,(15,Reptincel.New_Pokemon_same_espece()))
+Dracaufeu = Pokemon("Dracaufeu",["Feu","Vol"],[Mouv_Class.Griffe.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,78,84,78,109,85,100,45,{9:Mouv_Class.flameche.Newattaque(),15:Mouv_Class.GrozYeux.Newattaque(),30:Mouv_Class.Tranche.Newattaque(),38:Mouv_Class.LanceFlammes.Newattaque()},None)
+Reptincel  = Pokemon('Reptincel',["Feu"],[Mouv_Class.Griffe.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,58,64,58,80,65,80,45,{9:Mouv_Class.flameche.Newattaque(),15:Mouv_Class.GrozYeux.Newattaque(),30:Mouv_Class.Tranche.Newattaque(),38:Mouv_Class.LanceFlammes.Newattaque()},(30,Dracaufeu.New_Pokemon_same_espece()))
+Salameche = Pokemon("Salameche",["Feu"],[Mouv_Class.Griffe.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,39,52,43,60,50,65,45,{9:Mouv_Class.flameche.Newattaque(),15:Mouv_Class.GrozYeux.Newattaque(),30:Mouv_Class.Tranche.Newattaque(),38:Mouv_Class.LanceFlammes.Newattaque()},(15,Reptincel.New_Pokemon_same_espece()))
 ###########EAU
-Tortank = Pokemon("Tortank",["Eau"],attaque_aleatoire(),True,79,83,100,85,105,78,45,None,None)
-Carabaffe = Pokemon("Carabaffe",["Eau"],attaque_aleatoire(),True,59,63,80,65,80,58,45,None,(30,Tortank.New_Pokemon_same_espece()))
-Carapuce = Pokemon("Carapuce",["Eau"],attaque_aleatoire(),True,44,48,65,50,64,43)
+Tortank = Pokemon("Tortank",["Eau"],[Mouv_Class.charge.Newattaque(),Mouv_Class.MimiQueue.Newattaque()],True,79,83,100,85,105,78,45,{8:Mouv_Class.Ecume.Newattaque(),15:Mouv_Class.PistoletO.Newattaque(),22:Mouv_Class.Morsure.Newattaque(),28:Mouv_Class.Repli.Newattaque(),35:Mouv_Class.CoudKrane.Newattaque(),42:Mouv_Class.HydroCanon.Newattaque()},None)
+Carabaffe = Pokemon("Carabaffe",["Eau"],[Mouv_Class.charge.Newattaque(),Mouv_Class.MimiQueue.Newattaque()],True,59,63,80,65,80,58,45,{8:Mouv_Class.Ecume.Newattaque(),15:Mouv_Class.PistoletO.Newattaque(),22:Mouv_Class.Morsure.Newattaque(),28:Mouv_Class.Repli.Newattaque(),35:Mouv_Class.CoudKrane.Newattaque(),42:Mouv_Class.HydroCanon.Newattaque()},(30,Tortank.New_Pokemon_same_espece()))
+Carapuce = Pokemon("Carapuce",["Eau"],[Mouv_Class.charge.Newattaque(),Mouv_Class.MimiQueue.Newattaque()],True,44,48,65,50,64,43,44,{8:Mouv_Class.Ecume.Newattaque(),15:Mouv_Class.PistoletO.Newattaque(),22:Mouv_Class.Morsure.Newattaque(),28:Mouv_Class.Repli.Newattaque(),35:Mouv_Class.CoudKrane.Newattaque(),42:Mouv_Class.HydroCanon.Newattaque()},(15,Carabaffe))
 ########### Plante
-Florizarre = Pokemon("Florizarre",["Plante","Poison"],attaque_aleatoire(),True,80,82,83,100,100,80,45,None,None)
-Herbizarre = Pokemon("Herbizarre",["Plante","Poison"],attaque_aleatoire(),True,60,62,63,80,80,60,45,None,(30,Florizarre.New_Pokemon_same_espece()))
-Bulbizarre = Pokemon("Bulbizarre",["Plante","Poison"],attaque_aleatoire(),True,45,49,49,65,65,45,45,None,(30,Herbizarre.New_Pokemon_same_espece()))
+Florizarre = Pokemon("Florizarre",["Plante","Poison"],[Mouv_Class.charge.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,80,82,83,100,100,80,45,{7:Mouv_Class.Vampigraine.Newattaque(),13:Mouv_Class.FouetLianes.Newattaque(),20:Mouv_Class.PoudreToxique.Newattaque(),27:Mouv_Class.TrancheHerbe.Newattaque(),41:Mouv_Class.PoudreDodo.Newattaque()},None)
+Herbizarre = Pokemon("Herbizarre",["Plante","Poison"],[Mouv_Class.charge.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,60,62,63,80,80,60,45,{7:Mouv_Class.Vampigraine.Newattaque(),13:Mouv_Class.FouetLianes.Newattaque(),20:Mouv_Class.PoudreToxique.Newattaque(),27:Mouv_Class.TrancheHerbe.Newattaque(),41:Mouv_Class.PoudreDodo.Newattaque()},(30,Florizarre.New_Pokemon_same_espece()))
+Bulbizarre = Pokemon("Bulbizarre",["Plante","Poison"],[Mouv_Class.charge.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,45,49,49,65,65,45,45,{7:Mouv_Class.Vampigraine.Newattaque(),13:Mouv_Class.FouetLianes.Newattaque(),20:Mouv_Class.PoudreToxique.Newattaque(),27:Mouv_Class.TrancheHerbe.Newattaque(),41:Mouv_Class.PoudreDodo.Newattaque()},(30,Herbizarre.New_Pokemon_same_espece()))
 ########## "Électrik"
-Raichu = Pokemon("Raichu",["Électrik"],attaque_aleatoire(),True,60,90,55,90,80,110,75,None,None)
-Pikachu = Pokemon("Pikachu",["Électrik"],attaque_aleatoire(),True,35,55,40,50,50,90,190,None,(20,Raichu.New_Pokemon_same_espece()))# print(str(type(Pikachu))== "<class '__main__.Pokemon'>")
-##########"Glace"
-Lokhlass = Pokemon("Lokhlass",["Glace","Eau"],attaque_aleatoire(),True,130,85,80,85,95,60,45,None,None)
-##########""Combat"
-Mackogneur = Pokemon("Mackogneur",["Combat"],attaque_aleatoire(),True,90,130,80,65,85,55,45,None,None)
-Machopeur = Pokemon("Machopeur",["Combat"],attaque_aleatoire(),True,80,100,70,50,60,45,90,None,(30,Mackogneur.New_Pokemon_same_espece()))
-Machoc = Pokemon("Machoc",["Combat"],attaque_aleatoire(),True,70,80,50,35,35,35,180,None,(15,Machopeur.New_Pokemon_same_espece()))
-##########""Poison"
-Smogogo = Pokemon("Smogogo",["Poison"],attaque_aleatoire(),True,65,90,120,85,70,60,60,None,None)
-Smogo = Pokemon("Smogo",["Poison"],attaque_aleatoire(),True,40,65,95,60,45,35,190,None,(20,Smogogo.New_Pokemon_same_espece()))
-##########""Vol"
-Roucarnage = Pokemon("Roucarnage",["Vol","Normal"],attaque_aleatoire(),True,83,80,75,70,70,101,45,None,None)
-Roucoups  = Pokemon("Roucoups",["Vol","Normal"],attaque_aleatoire(),True,63,60,55,50,50,71,120,None,(30,Roucarnage.New_Pokemon_same_espece()))
-Roucool = Pokemon("Roucool",["Vol","Normal"],attaque_aleatoire(),True,40,45,40,35,35,56,255,None,(15,Roucoups.New_Pokemon_same_espece()))
 
+Raichu = Pokemon("Raichu",["Électrik"],[Mouv_Class.Eclair.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,60,90,55,90,80,110,75,{9:Mouv_Class.CageEclaire.Newattaque(),16:Mouv_Class.Vive_attaque.Newattaque(),26:Mouv_Class.Meteor.Newattaque(),33:Mouv_Class.hate.Newattaque(),43:Mouv_Class.FatalFoudre.Newattaque()},None)
+Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.Eclair.Newattaque(),Mouv_Class.rugissement.Newattaque()],True,35,55,40,50,50,90,190,{9:Mouv_Class.CageEclaire.Newattaque(),16:Mouv_Class.Vive_attaque.Newattaque(),26:Mouv_Class.Meteor.Newattaque(),33:Mouv_Class.hate.Newattaque(),43:Mouv_Class.FatalFoudre.Newattaque()},(20,Raichu.New_Pokemon_same_espece()))# print(str(type(Pikachu))== "<class '__main__.Pokemon'>")
+##########"Glace"
+Lokhlass = Pokemon("Lokhlass",["Glace","Eau"],[Mouv_Class.PistoletO.Newattaque(),Mouv_Class.rugissement.Newattaque],True,130,85,80,85,95,60,45,{16:Mouv_Class.Berceuse.Newattaque(),20:Mouv_Class.Brume.Newattaque(),25:Mouv_Class.Plaquage.Newattaque(),31:Mouv_Class.OndeFolie.Newattaque(),38:Mouv_Class.LaserGlace.Newattaque(),46:Mouv_Class.HydroCanon.Newattaque()},None)
+##########""Combat"
+Mackogneur = Pokemon("Mackogneur",["Combat"],[Mouv_Class.PoingKarate.Newattaque(),Mouv_Class.CoupdBoule.Newattaque()],True,90,130,80,65,85,55,45,{25:Mouv_Class.GrozYeux.Newattaque(),32:Mouv_Class.Puissance.Newattaque(),39:Mouv_Class.FrappeAtlas.Newattaque(),46:Mouv_Class.Sacrifice.Newattaque()},None)
+Machopeur = Pokemon("Machopeur",["Combat"],[Mouv_Class.PoingKarate.Newattaque(),Mouv_Class.CoupdBoule.Newattaque()],True,80,100,70,50,60,45,90,{25:Mouv_Class.GrozYeux.Newattaque(),32:Mouv_Class.Puissance.Newattaque(),39:Mouv_Class.FrappeAtlas.Newattaque(),46:Mouv_Class.Sacrifice.Newattaque()},(30,Mackogneur.New_Pokemon_same_espece()))
+Machoc = Pokemon("Machoc",["Combat"],[Mouv_Class.PoingKarate.Newattaque(),Mouv_Class.CoupdBoule.Newattaque()],True,70,80,50,35,35,35,180,{25:Mouv_Class.GrozYeux.Newattaque(),32:Mouv_Class.Puissance.Newattaque(),39:Mouv_Class.FrappeAtlas.Newattaque(),46:Mouv_Class.Sacrifice.Newattaque()},(15,Machopeur.New_Pokemon_same_espece()))
+##########""Poison"
+Smogogo = Pokemon("Smogogo",["Poison"],[Mouv_Class.charge.Newattaque(),Mouv_Class.Puredpois.Newattaque()],True,65,90,120,85,70,60,60,{10:Mouv_Class.Detritus.Newattaque(),20:Mouv_Class.Jetsable.Newattaque(),30:Mouv_Class.Destruction.Newattaque,35:Mouv_Class.Brume.Newattaque(),50:Mouv_Class.Explosion.Newattaque()},None)
+Smogo = Pokemon("Smogo",["Poison"],[Mouv_Class.charge.Newattaque(),Mouv_Class.Puredpois.Newattaque()],True,40,65,95,60,45,35,190,{10:Mouv_Class.Detritus.Newattaque(),20:Mouv_Class.Jetsable.Newattaque(),30:Mouv_Class.Destruction.Newattaque,35:Mouv_Class.Brume.Newattaque(),50:Mouv_Class.Explosion.Newattaque()},(20,Smogogo.New_Pokemon_same_espece()))
+##########""Vol"
+Roucarnage = Pokemon("Roucarnage",["Vol","Normal"],[Mouv_Class.Tornade.Newattaque()],True,83,80,75,70,70,101,45,{5:Mouv_Class.Jetsable.Newattaque(),12:Mouv_Class.Vive_attaque.Newattaque(),19:Mouv_Class.CruAile.Newattaque(),28:Mouv_Class.hate.Newattaque()},None)
+Roucoups  = Pokemon("Roucoups",["Vol","Normal"],[Mouv_Class.Tornade.Newattaque()],True,63,60,55,50,50,71,120,{5:Mouv_Class.Jetsable.Newattaque(),12:Mouv_Class.Vive_attaque.Newattaque(),19:Mouv_Class.CruAile.Newattaque(),28:Mouv_Class.hate.Newattaque()},(30,Roucarnage.New_Pokemon_same_espece()))
+Roucool = Pokemon("Roucool",["Vol","Normal"],[Mouv_Class.Tornade.Newattaque()],True,40,45,40,35,35,56,255,{5:Mouv_Class.Jetsable.Newattaque(),12:Mouv_Class.Vive_attaque.Newattaque(),19:Mouv_Class.CruAile.Newattaque(),28:Mouv_Class.hate.Newattaque()},(15,Roucoups.New_Pokemon_same_espece()))
 ##########""Psy"
-Flagadoss = Pokemon("Flagadoss",["Eau","Psy"],attaque_aleatoire(),True,95,75,110,100,80,30,75,None,None)
-Ramoloss = Pokemon("Ramoloss",["Eau","Psy"],attaque_aleatoire(),True,90,65,65,40,40,15,190,None,(15,Flagadoss.New_Pokemon_same_espece()))
+Flagadoss = Pokemon("Flagadoss",["Eau","Psy"],[Mouv_Class.Chocmental.Newattaque(),Mouv_Class.charge.Newattaque()],True,95,75,110,100,80,30,75,{22:Mouv_Class.CoupdBoule.Newattaque(),27:Mouv_Class.rugissement.Newattaque(),33:Mouv_Class.PistoletO.Newattaque(),40:Mouv_Class.Amnesie.Newattaque(),48:Mouv_Class.Psyko.Newattaque()},None)
+Ramoloss = Pokemon("Ramoloss",["Eau","Psy"],[Mouv_Class.Chocmental.Newattaque(),Mouv_Class.charge.Newattaque()],True,90,65,65,40,40,15,190,{22:Mouv_Class.CoupdBoule.Newattaque(),27:Mouv_Class.rugissement.Newattaque(),33:Mouv_Class.PistoletO.Newattaque(),40:Mouv_Class.Amnesie.Newattaque(),48:Mouv_Class.Psyko.Newattaque()},(15,Flagadoss.New_Pokemon_same_espece()))
 ##########""Insect"
-Papilusion= Pokemon("Papilusion ",["Insecte","Vol"],attaque_aleatoire(),True,60,45,50,90,80,70,45,None,None)
-Chrysacier = Pokemon("Chrysacier",["Insecte"],attaque_aleatoire(),True,50,20,55,25,25,30,120,None,(30,Papilusion.New_Pokemon_same_espece()))
-Chenipan = Pokemon("Chenipan",["Insect"],attaque_aleatoire(),True,45,30,35,20,20,45,255,None,(15,Chrysacier.New_Pokemon_same_espece()))
+Papilusion= Pokemon("Papilusion ",["Insecte","Vol"],[Mouv_Class.Secretation.Newattaque(),Mouv_Class.charge.Newattaque(),Mouv_Class.Repli.Newattaque()],True,60,45,50,90,80,70,45,{31:Mouv_Class.Chocmental.Newattaque(),32:Mouv_Class.PoudreToxique.Newattaque(),33:Mouv_Class.CageEclaire},None)
+Chrysacier = Pokemon("Chrysacier",["Insecte"],[Mouv_Class.Secretation.Newattaque(),Mouv_Class.charge.Newattaque(),Mouv_Class.Repli.Newattaque()],True,50,20,55,25,25,30,120,{31:Mouv_Class.Chocmental.Newattaque(),32:Mouv_Class.PoudreToxique.Newattaque(),33:Mouv_Class.CageEclaire},(30,Papilusion.New_Pokemon_same_espece()))
+Chenipan = Pokemon("Chenipan",["Insect"],[Mouv_Class.Secretation.Newattaque(),Mouv_Class.charge.Newattaque(),Mouv_Class.Repli.Newattaque()],True,45,30,35,20,20,45,255,{31:Mouv_Class.Chocmental.Newattaque(),32:Mouv_Class.PoudreToxique.Newattaque(),33:Mouv_Class.CageEclaire},(15,Chrysacier.New_Pokemon_same_espece()))
 ##########""Roche"
-Grolem = Pokemon("Grolem",["Sol","Roche"],attaque_aleatoire(),True,80,120,130,55,65,45,45,None,None)
-Gravalanch = Pokemon("Gravalanch",["Sol","Roche"],attaque_aleatoire(),True,55,95,115,45,45,35,120,None,(30,Grolem.New_Pokemon_same_espece()))
-Racaillou = Pokemon("Racaillou",["Roche","Sol"],attaque_aleatoire(),True,40,80,100,30,30,20,255,None,(15,Gravalanch.New_Pokemon_same_espece()))
+
+Grolem = Pokemon("Grolem",["Sol","Roche"],[Mouv_Class.charge.Newattaque(),Mouv_Class.Repli.Newattaque()],True,80,120,130,55,65,45,45,{16:Mouv_Class.JetPierre.Newattaque(),21:Mouv_Class.Destruction.Newattaque(),31:Mouv_Class.Seisme.Newattaque(),36:Mouv_Class.Explosion.Newattaque()},None)
+Gravalanch = Pokemon("Gravalanch",["Sol","Roche"],[Mouv_Class.charge.Newattaque(),Mouv_Class.Repli.Newattaque()],True,55,95,115,45,45,35,120,{16:Mouv_Class.JetPierre.Newattaque(),21:Mouv_Class.Destruction.Newattaque(),31:Mouv_Class.Seisme.Newattaque(),36:Mouv_Class.Explosion.Newattaque()},(30,Grolem.New_Pokemon_same_espece()))
+Racaillou = Pokemon("Racaillou",["Roche","Sol"],[Mouv_Class.charge.Newattaque(),Mouv_Class.Repli.Newattaque()],True,40,80,100,30,30,20,255,{16:Mouv_Class.JetPierre.Newattaque(),21:Mouv_Class.Destruction.Newattaque(),31:Mouv_Class.Seisme.Newattaque(),36:Mouv_Class.Explosion.Newattaque()},(15,Gravalanch.New_Pokemon_same_espece()))
 ##########""Spectre"
-Ectoplasma =Pokemon("Ectoplasma",["Spectre","Poison"],attaque_aleatoire(),True,60,65,60,130,75,110,45,None,None)
-Spectrum= Pokemon("Spectrum",["Spectre","Poison"],attaque_aleatoire(),True,45,50,45,115,55,95,90,None,(30,Ectoplasma.New_Pokemon_same_espece()))
-Fantominus=Pokemon("Fantominus",["Spectre","Poison"],attaque_aleatoire(),True,30,35,30,100,35,80,190,None,(15,Spectrum.New_Pokemon_same_espece()))
+Ectoplasma =Pokemon("Ectoplasma",["Spectre","Poison"],[Mouv_Class.Lechouille.Newattaque(),Mouv_Class.Psyko.Newattaque(),Mouv_Class.Hypnose.Newattaque(),Mouv_Class.Detritus.Newattaque()],True,60,65,60,130,75,110,45,None,None)
+Spectrum= Pokemon("Spectrum",["Spectre","Poison"],[Mouv_Class.Lechouille.Newattaque(),Mouv_Class.Psyko.Newattaque(),Mouv_Class.Hypnose.Newattaque(),Mouv_Class.Detritus.Newattaque()],True,45,50,45,115,55,95,90,None,(30,Ectoplasma.New_Pokemon_same_espece()))
+Fantominus=Pokemon("Fantominus",["Spectre","Poison"],[Mouv_Class.Lechouille.Newattaque(),Mouv_Class.Psyko.Newattaque(),Mouv_Class.Hypnose.Newattaque(),Mouv_Class.Detritus.Newattaque()],True,30,35,30,100,35,80,190,None,(15,Spectrum.New_Pokemon_same_espece()))
 ######################" TEST IV "
 # Pikachu.afficher_state()
 # Pikachu.IV_Make()
