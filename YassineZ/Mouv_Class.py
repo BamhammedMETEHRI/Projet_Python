@@ -1,5 +1,6 @@
 import math
 import random
+from statistics import NormalDist
 from time import sleep
 
 #La class Mouv permet de donner des mouv    au pokèmon#
@@ -46,6 +47,11 @@ Liste_attaque_Insecte = []
 Liste_attaque_Roche = []
 Liste_attaque_Spectre = []
 
+def alreadyHer(Attck,L):
+    for i in range(len(L)):
+        if L[i].name == Attck.name:
+            return True
+    return False
 class Mouv:
     def __init__(self,name,Type,Class,Precision,PP,Puissance=None,Effect=None,description=None,target=None,CoeficienCritique=None):
         self.CoeficienCritique = 0
@@ -73,22 +79,53 @@ class Mouv:
         else:
             self.target="self"
         for i in range(len(Liste_Type)):
-            if i==0:
+            if i==0  :
                 Liste_attaque_Normal.append(self)
-            elif i ==1:
+            elif i ==1  :
                 Liste_attaque_Feu.append(self)
-            elif i==2:
+            elif i==2 :
                 Liste_attaque_Eau.append(self)
-            elif i == 3:
+            elif i == 3 :
                 Liste_attaque_Plante.append(self)
-            elif i==4:
+            elif i==4 :
                 Liste_attaque_Électrik.append(self)
-            elif i==5:
+            elif i==5 :
                 Liste_attaque_Glace.append(self)
-            elif i==6:
+            elif i==6 :
                 Liste_attaque_Combat.append(self)
-            elif i==7:
+            elif i==7 :
                 Liste_attaque_Poison.append(self)
+            elif i == 8 :
+                Liste_attaque_Sol.append(self)
+            elif i==9 :
+                Liste_attaque_Vol.append(self)
+            elif i==10 :
+                Liste_attaque_Psy.append(self)
+            elif i==10:
+                Liste_attaque_Insecte.append(self)
+            elif i==11 :
+                Liste_attaque_Roche.append(self)
+            elif i==12 :
+                Liste_attaque_Spectre.append(self)
+
+    def Newattaque(self):
+        if self.Class == "Physique":
+            C=0
+        elif self.Class == "Special":
+            C=1
+        else:
+            C=2
+        if self.Effect==None:
+            Effet = None
+        elif type(self.Effect)==str:
+            Effet =self.Effect 
+        else:
+            Effet = self.Effect.NewEffect()
+        t =Mouv(self.name,self.Type,C,self.Precision,self.full_PP,self.Puissance,Effet,self.description,self.target)
+        for i in AllCompetence:
+            if len(i) > 1 and i[len(i)-1]==self:
+                i.pop(len(i)-1)
+        return t
 
     def afficher_element(self):
         if self.Effect ==None:
@@ -215,15 +252,17 @@ class Mouv:
 
 class Effect:
     def __init__(self,name,description,fonction_aplication=None,nbrDeTour=None,target=None) :#effect = permanant pendant tout un combat
-        self.nbrTour = nbrDeTour
         self.name = name                #Nom de l'effect
+        self.nbrTour = nbrDeTour
         self.description = description  #Description de l'effect
         self.Fonction_aplication = fonction_aplication
         if target == None:
             self.target = "other"
         else:
             self.target = "self"
-    
+    def NewEffect(self):
+        return Effect(self.name,self.description,self.Fonction_aplication,self.nbrTour,self.target)
+
     def update_entity(self,target,Lanceur=None):
         if self.name == "l'attaque baisse":
 
@@ -515,5 +554,18 @@ Psyko = Mouv("Psyko","Psy",1,100,10,90,defensespe_baisse1_1sur10,"Une puissante 
 Secretation = Mouv("Sécrétion","Insect",2,95,40,None,vitesse_baisse1,"Le lanceur crache de la soie pour ligoter l'ennemi et beaucoup baisser sa Vitesse.")
 JetPierre = Mouv("Jet-Pierres","Roche",0,90,15,50,None,"Le lanceur lâche une pierre sur l'ennemi.")
 
-#faire Ecume
 # charge.afficher_element()
+AllCompetence = [
+    Liste_attaque_Normal,
+    Liste_attaque_Feu,
+    Liste_attaque_Eau,Liste_attaque_Plante,
+    Liste_attaque_Électrik,
+    Liste_attaque_Glace,
+    Liste_attaque_Combat,
+    Liste_attaque_Poison,
+    Liste_attaque_Sol,
+    Liste_attaque_Vol,
+    Liste_attaque_Psy,
+    Liste_attaque_Insecte,
+    Liste_attaque_Roche,
+    Liste_attaque_Spectre]

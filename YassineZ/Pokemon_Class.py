@@ -1,3 +1,4 @@
+from pickle import NONE
 from tkinter import N
 import colorama
 from colorama import Fore
@@ -110,7 +111,7 @@ Liste_de_Cran_Esquive_Precision = [3/9,3/8,3/7,3/6,3/5,3/4,3/3,4/3,5/3,6/3,7/3,8
 Liste_de_Pokemon = []
 #definir un pokemon il est composé de quoi comme variable #Next_Evolution est un tupler un chifre et Pokemon
 class Pokemon:
-    def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture,New_ability,Next_Evolution) :
+    def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture,New_ability=None,Next_Evolution=None) :
         self.Next_Evolution = Next_Evolution
         self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut pas changer ....
         self.Espece = name              #...l'espece du Pokemon fix qui est fixe 
@@ -571,6 +572,8 @@ class Pokemon:
         return a
 
     def apprendre_competence(self):
+        if self.NewAbility == None:
+            return
         for i in range(self.Level):
             if has_key(self.NewAbility,i):
                 if len(self.competence) <4:
@@ -583,6 +586,22 @@ class Pokemon:
                         del self.NewAbility[i]
                     else:
                         del self.NewAbility[i]
+    def Evolution(self):
+        if self.Next_Evolution != None:
+            if self.Level>=self.Next_Evolution[0]:
+                if self.name ==self.Espece:
+                    self.name = self.Next_Evolution[1].name
+                self.Espece = self.Next_Evolution[1].Espece
+                self.HP_full = self.Next_Evolution[1].HP_full
+                self.HP = self.HP_full
+                self.State_Base_Attack = self.Next_Evolution[1].State_Base_Attack
+                self.State_Base_AttackSPE = self.Next_Evolution[1].State_Base_AttackSPE
+                self.State_Base_Def = self.Next_Evolution[1].State_Base_Def
+                self.State_Base_DefSPE = self.Next_Evolution[1].State_Base_DefSPE
+                self.State_Base_Speed = self.Next_Evolution[1].State_Base_Speed
+                self.Type = self.Next_Evolution[1].Type
+                self.Next_Evolution = self.Next_Evolution[1].Next_Evolution
+                self.update()
 
 def has_key(Dic,key):
     for i in Dic.keys():
@@ -591,13 +610,69 @@ def has_key(Dic,key):
     return False
 
 
+
 ###################CREATION POKEMON
 
-Salameche = Pokemon("Salameche",["Feu"],[],True,39,52,43,60,50,65,45,)
+def attaque_aleatoire():
+    L=[]
+    for _ in range(4):
+        c = Mouv_Class.AllCompetence[random.randint(0,len(Mouv_Class.AllCompetence)-1)]
+        c = c[random.randint(0,len(c)-1)]
+        if L ==[]:
+            L.append(c.Newattaque())
+        else:
+            while Mouv_Class.alreadyHer(c,L):
+                c = Mouv_Class.AllCompetence[random.randint(0,len(Mouv_Class.AllCompetence)-1)]
+                c = c[random.randint(0,len(c)-1)]
+            L.append(c.Newattaque())
+    return L
+###########Normal
+Persian = Pokemon('Persian',["Normal"],attaque_aleatoire(),True,65,70,60,65,65,115,90,None,None)
+Miaouss = Pokemon("Miaouss",["Normal"],attaque_aleatoire(),True,40,45,35,40,40,90,255,None,(15,Persian.New_Pokemon_same_espece()))
+###########FEUX
+Dracaufeu = Pokemon("Dracaufeu",["Feu","Vol"],attaque_aleatoire(),True,78,84,78,109,85,100,45,None,None)
+Reptincel  = Pokemon('Reptincel',["Feu"],attaque_aleatoire(),True,58,64,58,80,65,80,45,None,(30,Dracaufeu.New_Pokemon_same_espece()))
+Salameche = Pokemon("Salameche",["Feu"],attaque_aleatoire(),True,39,52,43,60,50,65,45,None,(15,Reptincel.New_Pokemon_same_espece()))
+###########EAU
+Tortank = Pokemon("Tortank",["Eau"],attaque_aleatoire(),True,79,83,100,85,105,78,45,None,None)
+Carabaffe = Pokemon("Carabaffe",["Eau"],attaque_aleatoire(),True,59,63,80,65,80,58,45,None,(30,Tortank.New_Pokemon_same_espece()))
+Carapuce = Pokemon("Carapuce",["Eau"],attaque_aleatoire(),True,44,48,65,50,64,43)
+########### Plante
+Florizarre = Pokemon("Florizarre",["Plante","Poison"],attaque_aleatoire(),True,80,82,83,100,100,80,45,None,None)
+Herbizarre = Pokemon("Herbizarre",["Plante","Poison"],attaque_aleatoire(),True,60,62,63,80,80,60,45,None,(30,Florizarre.New_Pokemon_same_espece()))
+Bulbizarre = Pokemon("Bulbizarre",["Plante","Poison"],attaque_aleatoire(),True,45,49,49,65,65,45,45,None,(30,Herbizarre.New_Pokemon_same_espece()))
+########## "Électrik"
+Raichu = Pokemon("Raichu",["Électrik"],attaque_aleatoire(),True,60,90,55,90,80,110,75,None,None)
+Pikachu = Pokemon("Pikachu",["Électrik"],attaque_aleatoire(),True,35,55,40,50,50,90,190,None,(20,Raichu.New_Pokemon_same_espece()))# print(str(type(Pikachu))== "<class '__main__.Pokemon'>")
+##########"Glace"
+Lokhlass = Pokemon("Lokhlass",["Glace","Eau"],attaque_aleatoire(),True,130,85,80,85,95,60,45,None,None)
+##########""Combat"
+Mackogneur = Pokemon("Mackogneur",["Combat"],attaque_aleatoire(),True,90,130,80,65,85,55,45,None,None)
+Machopeur = Pokemon("Machopeur",["Combat"],attaque_aleatoire(),True,80,100,70,50,60,45,90,None,(30,Mackogneur.New_Pokemon_same_espece()))
+Machoc = Pokemon("Machoc",["Combat"],attaque_aleatoire(),True,70,80,50,35,35,35,180,None,(15,Machopeur.New_Pokemon_same_espece()))
+##########""Poison"
+Smogogo = Pokemon("Smogogo",["Poison"],attaque_aleatoire(),True,65,90,120,85,70,60,60,None,None)
+Smogo = Pokemon("Smogo",["Poison"],attaque_aleatoire(),True,40,65,95,60,45,35,190,None,(20,Smogogo.New_Pokemon_same_espece()))
+##########""Vol"
+Roucarnage = Pokemon("Roucarnage",["Vol","Normal"],attaque_aleatoire(),True,83,80,75,70,70,101,45,None,None)
+Roucoups  = Pokemon("Roucoups",["Vol","Normal"],attaque_aleatoire(),True,63,60,55,50,50,71,120,None,(30,Roucarnage.New_Pokemon_same_espece()))
+Roucool = Pokemon("Roucool",["Vol","Normal"],attaque_aleatoire(),True,40,45,40,35,35,56,255,None,(15,Roucoups.New_Pokemon_same_espece()))
 
-
-Pikachu = Pokemon("Pikachu",["Électrik"],[],True,35,55,40,50,50,90,190,{0:Mouv_Class.rugissement,1:Mouv_Class.charge,3:Mouv_Class.flameche,4:Mouv_Class.Griffe,5:Mouv_Class.Vive_attaque})# print(str(type(Pikachu))== "<class '__main__.Pokemon'>")
-
+##########""Psy"
+Flagadoss = Pokemon("Flagadoss",["Eau","Psy"],attaque_aleatoire(),True,95,75,110,100,80,30,75,None,None)
+Ramoloss = Pokemon("Ramoloss",["Eau","Psy"],attaque_aleatoire(),True,90,65,65,40,40,15,190,None,(15,Flagadoss.New_Pokemon_same_espece()))
+##########""Insect"
+Papilusion= Pokemon("Papilusion ",["Insecte","Vol"],attaque_aleatoire(),True,60,45,50,90,80,70,45,None,None)
+Chrysacier = Pokemon("Chrysacier",["Insecte"],attaque_aleatoire(),True,50,20,55,25,25,30,120,None,(30,Papilusion.New_Pokemon_same_espece()))
+Chenipan = Pokemon("Chenipan",["Insect"],attaque_aleatoire(),True,45,30,35,20,20,45,255,None,(15,Chrysacier.New_Pokemon_same_espece()))
+##########""Roche"
+Grolem = Pokemon("Grolem",["Sol","Roche"],attaque_aleatoire(),True,80,120,130,55,65,45,45,None,None)
+Gravalanch = Pokemon("Gravalanch",["Sol","Roche"],attaque_aleatoire(),True,55,95,115,45,45,35,120,None,(30,Grolem.New_Pokemon_same_espece()))
+Racaillou = Pokemon("Racaillou",["Roche","Sol"],attaque_aleatoire(),True,40,80,100,30,30,20,255,None,(15,Gravalanch.New_Pokemon_same_espece()))
+##########""Spectre"
+Ectoplasma =Pokemon("Ectoplasma",["Spectre","Poison"],attaque_aleatoire(),True,60,65,60,130,75,110,45,None,None)
+Spectrum= Pokemon("Spectrum",["Spectre","Poison"],attaque_aleatoire(),True,45,50,45,115,55,95,90,None,(30,Ectoplasma.New_Pokemon_same_espece()))
+Fantominus=Pokemon("Fantominus",["Spectre","Poison"],attaque_aleatoire(),True,30,35,30,100,35,80,190,None,(15,Spectrum.New_Pokemon_same_espece()))
 ######################" TEST IV "
 # Pikachu.afficher_state()
 # Pikachu.IV_Make()

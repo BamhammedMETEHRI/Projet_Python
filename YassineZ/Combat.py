@@ -419,12 +419,7 @@ def COMBAT(map,Joueur,Adverser):
 
     else :
         print("Un Dresseur !! ")
-# Pikachu.statu = Mouv_Class.Brule1sur10
 
-Salameche_du_Joueur.HP=0.5
-NVX_PK = Pokemon_Class.Pikachu.New_Pokemon_same_espece()
-NVX_PK.name= "JOSE"
-moi.team.append(NVX_PK)
 COMBAT(carte,moi,PKSauvage)
 #Salameche_du_Joueur.Info_Pokemon()
 #Faire les degat  FAIT
