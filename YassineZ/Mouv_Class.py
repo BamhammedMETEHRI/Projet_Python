@@ -47,7 +47,10 @@ Liste_attaque_Roche = []
 Liste_attaque_Spectre = []
 
 class Mouv:
-    def __init__(self,name,Type,Class,Precision,PP,Puissance=None,Effect=None,description=None,target=None):
+    def __init__(self,name,Type,Class,Precision,PP,Puissance=None,Effect=None,description=None,target=None,CoeficienCritique=None):
+        self.CoeficienCritique = 0
+        if CoeficienCritique != None:
+            self.CoeficienCritique += CoeficienCritique
         self.full_PP = PP
         self.PP = self.full_PP                #Nombre de fois que l'on peut utiliser cette attaque
         self.name = name            #nom de l'attaque 
@@ -104,7 +107,13 @@ class Mouv:
         vitesse = round(equipier.Speed)
         if not(vitesse%2 == 0):
             vitesse -=1
-        if random.randint(0,255) <= vitesse /2:
+        T = (vitesse /2)
+        b = 8
+        if self.CoeficienCritique == 0:
+            b = 1
+        else:
+            b*= self.CoeficienCritique
+        if random.randint(0,255) <= T*b :
             print("1. COUP CRITIQUE !!!!")
             sleep(2)
             return (2*equipier.Level+5)/(equipier.Level+5)
@@ -161,7 +170,8 @@ class Mouv:
                 self.Other_Attack(adversaire)
             return 0
         CM = self.Calcule_CM(equipier,adversaire)
-
+        if self.name =="Frappe Atlas":
+            Attaque = equipier.Level
         if self.Class == "Physique":
             print("c'est une Attack physique \n")
             Attaque= equipier.Attack
@@ -175,10 +185,14 @@ class Mouv:
         Degat = ((equipier.Level*0.4+2)*Attaque*self.Puissance)
         Degat = Degat / (Defense*50)
         Degat = (Degat +2) * CM
-        print(adversaire.name," perd environs",round(Degat)," PV")
+        print(adversaire.name," perd environs",(Degat*100)//adversaire.HP_full,"% PV")
         sleep(1)
+        if self.Effect.target == "self":
+            self.Effect.update_entity(equipier)
         if self.Effect != None and adversaire.statu == None:
             self.Effect.update_entity(adversaire)
+        elif self.Effect != None and self.Effect.name=="Infecter":
+            self.Effect.update_entity(adversaire,equipier)
         return Degat
 
     def Other_Attack(self,target):
@@ -194,22 +208,70 @@ class Mouv:
             # print(equipier.name," reussi son attaque ",self.name," sur ",adversaire.name,".")
             return True
         else :
+            if self.name == "Météores":
+                return True
             print(equipier.name," rate son attaque .")
             return False
 
 class Effect:
-    def __init__(self,name,description,fonction_aplication=None,nbrDeTour=None) :#effect = permanant pendant tout un combat
+    def __init__(self,name,description,fonction_aplication=None,nbrDeTour=None,target=None) :#effect = permanant pendant tout un combat
         self.nbrTour = nbrDeTour
         self.name = name                #Nom de l'effect
         self.description = description  #Description de l'effect
         self.Fonction_aplication = fonction_aplication
+        if target == None:
+            self.target = "other"
+        else:
+            self.target = "self"
     
-    def update_entity(self,target):
+    def update_entity(self,target,Lanceur=None):
         if self.name == "l'attaque baisse":
 
             print("L'attaque de ",target.name," baisse ")
             target.Changement_de_Cran("Attaque",-1)
 
+        elif self.name[0:17] == "la Precision baisse":
+            print("La Precision du Joueur ",target.name," baisse. ")
+            target.Changement_de_Cran("Precision",-1-len(self.name[17:]))
+
+        elif self.name[0:17] == "la vitesse baisse":
+            print("La vitesse du Joueur ",target.name," baisse. ")
+            target.Changement_de_Cran("Speed",-1-len(self.name[17:]))
+
+        elif self.name[0:18] == "la vitesse augment":
+            print("La vitesse du Joueur ",target.name," augmente. ")
+            target.Changement_de_Cran("Speed",+1+len(self.name[18:]))
+        
+        elif self.name[0:17] == "la defense baisse":
+            print("La defense du Joueur ",target.name," baisse. ")
+            target.Changement_de_Cran("Defense",-1-len(self.name[17:]))
+
+        elif self.name[0:18] == "la defense augment":
+            print("La defense du Joueur ",target.name," augmente. ")
+            target.Changement_de_Cran("Defense",+1+len(self.name[18:]))
+
+        elif self.name[0:21] == "la defensespe augment":
+            print("La defense du Joueur ",target.name," augmente. ")
+            target.Changement_de_Cran("DefenseSPE",+1+len(self.name[21:]))
+        
+        elif self.name[0:20] == "la defensespe baisse" and self.Fonction_aplication():
+            print("La defense du Joueur ",target.name," baisse. ")
+            target.Changement_de_Cran("DefenseSPE",-1-len(self.name[20:]))
+
+        elif self.name == "Peur":
+            if self.Fonction_aplication() and self.nbrTour > 0:
+                target.PetitStatu.append(self)
+            elif self.nbrTour <=0 :
+                print(target.name," n'a plus peur")
+                for i in range(len(target.PetitStatu)):
+                    if target.PetitStatu[i]==self:
+                        target.PetitStatu.pop(i)
+            else:
+                self.nbrTour -=1
+                print("Il a Peur Il ne peut pas attaquer")
+                sleep(3)
+                return False
+            
         elif self.name == "bruler":
 
             if self.Fonction_aplication() and target.statu==None and self.nbrTour > 0:
@@ -226,24 +288,232 @@ class Effect:
                     target.HP = target.HP - (target.HP_full*(1/16))
                     print("il perds ",math.ceil(target.HP_full*(1/16))," PV")
                     target.All_Variable["HP"] = target.HP
+        
+        elif self.name == "Empoisoner":
+
+            if self.Fonction_aplication() and target.statu==None and self.nbrTour > 0:
+                target.statu=self
+                print("Mince Maintenant ",target.name," est empoisoner !")
+            elif self.nbrTour <=0 :
+                print(target.name," n'est plus empoisoner")
+                target.statu = None
+            elif type(target.statu)== Effect: 
+                if target.statu.name == "Empoisoner":
+                    self.nbrTour -=1
+                    print("Aïe Aïe ",target.name," subit des degat a cause du poison")                                 
+                    target.HP = target.HP - (target.HP_full*(1/16))
+                    print("il perds ",math.ceil(target.HP_full*(1/16))," PV")
+                    target.All_Variable["HP"] = target.HP
+
+
+        elif self.name == "Infecter":
+
+            if not(self in target.PetitStatu):
+                target.PetitStatu.append(self)
+                print("Mince Maintenant ",target.name," est Infecter !")
+            else: 
+                print("Aïe Aïe ",target.name," subit des degat a cause de l'infection")                                 
+                target.HP = target.HP - (target.HP_full*(1/8))
+                print("il perds ",math.ceil(target.HP_full*(1/8)*100)//target.HP_full," PV")
+                Lanceur.HP += Lanceur.HP_full*0.3
+                if Lanceur.HP > Lanceur.HP_full:
+                    Lanceur.HP = Lanceur.HP_full
+                print("Et ",Lanceur.name," gagne 30% \de ces PV")
+
+        elif self.name == "Confusion":
+
+            if not(self in target.PetitStatu):
+                target.PetitStatu.append(self)
+                print("Mince Maintenant, ",target.name ,"est confus !")
+            elif self.nbrTour <=0 :
+                print(target.name," n'est plus confus")
+                target.canAttack = True
+                for i in range(len(target.PetitStatu)):
+                    if self.name == target.PetitStatu[i]:
+                        target.PetitStatu.pop(i)
+            else: 
+                if random.randint(1,2) == 1:
+                    target.canAttack = False
+                    print(target.name," se frappe lui meme")
+                    Degat = ((target.Level*0.4+2)*target.Attack*40)
+                    Degat = Degat / (target.Defense*50)
+                    Degat = (Degat +2)
+                    target.HP -= Degat
+                    print("il perd ",(Degat*100)//target.HP_full,"%\ de ces PV")
+                else:
+                    target.canAttack = True
+
+
+        elif self.name == "Neutre":
+
+            if not(self in target.PetitStatu):
+                target.PetitStatu.append(self)
+                print("Maintenant ton equipe ne pas baisser leur state !")
+            elif self.nbrTour <=0 :
+                print("Vous nete plus proteger par les changement de state")
+            else: 
+                self.nbrTour -=1
+                target.Fin_de_Combat("o")
+        elif self.name == "Someil":
+
+            if self.Fonction_aplication() and target.statu==None and self.nbrTour > 0:
+                target.statu=self
+                target.All_Variable["statu"] = self.name
+                print("Mince Maintenant ",target.name," est ENDORMIE !")
+            elif self.nbrTour <=0 :
+                print(target.name," n'est plus endormie et il est reveiler")
+                target.canAttack = True
+                target.statu = None
+            elif type(target.statu)== Effect: 
+                if target.statu.name == "Someil":
+                    self.nbrTour -=1
+                    print(target.name," dors paisiblement")                                 
+                    target.canAttack = False
+
+        elif self.name == "Gel":
+
+            if self.Fonction_aplication() and target.statu==None and self.nbrTour > 0:
+                target.statu=self
+                target.All_Variable["statu"] = self.name
+                print("Mince Maintenant ",target.name," est GELER !")
+            elif self.nbrTour <=0 :
+                print(target.name," n'est plus geler")
+                target.canAttack = True
+                target.statu = None
+            elif type(target.statu)== Effect: 
+                if target.statu.name == "Gel":
+                    self.nbrTour -=1
+                    print(target.name," est comme un galçons")                                 
+                    target.canAttack = False
+
+        elif self.name == "paralyse":
+
+            if self.Fonction_aplication() and target.statu==None and self.nbrTour > 0:
+                target.statu=self
+                target.speed /=2
+                print("Mince Maintenant ",target.name," est Paralyse !")
+            elif self.nbrTour <=0 :
+                print(target.name," n'est plus paralyse")
+                target.speed = target.speed_full
+                target.statu = None
+            elif type(target.statu)== Effect: 
+                if target.statu.name == "paralyse":
+                    self.nbrTour -=1
+                    if random.randint(1,4) == 1 :
+                        print(target.name," Ne peut pas jouer il est Paralyse")
+                        return False
+        elif self.name == "Contre coup":
+            print("Contre coup le jouer qui lancer l'attaque ce blesse il perd 5% de ces pV")
+            target.HP -= target.HP_full * 0.5 
+        elif self.name == "AUTO KO":
+            print(target.name," se suicide")
+            target.HP=0
+        return True
             
 
 def pourcent1sur10():
     if random.randint(0,100)<=10:
         return True
     return False
-# print(pourcent1sur10())
+def pourcent1sur4():
+    if random.randint(1,4)== 1:
+        return True
+    return False
+def pourcent1sur3():
+    if random.randint(0,2)== 0:
+        return True
+    return False
+def sure():
+    return True
+# print(pource
+# nt1sur10())
 
 #Class = 0:Physique ,1:Speacial ,2:Autre
 #Precision = valeur entre 1 et 100 (pourcentage)
 #Nome Type Class Precision Puissance Effect
-#effet
-attaque_baisse = Effect("l'attaque baisse","L'attaque du Joueur adverse baisse d'un Cran")
-Brule1sur10 = Effect("bruler","le Joueur ayant ce statu perds 1 / 16 de ces pv complet",pourcent1sur10,random.randint(5,7)) 
 
-#attaque
-rugissement = Mouv("rugissement","Normal",2,100,40,None,attaque_baisse,"Le lanceur pousse un cri tout mimi pour tromper la vigilance de l'ennemi et baisser son Attaque.")
+#CREATION effet
+attaque_baisse1 = Effect("l'attaque baisse","L'attaque du Joueur adverse baisse d'un Cran")
+defense_baisse1 = Effect("la defense baisse","Baisse la Défense des cibles d'un Cran")
+defense_baisse2 = Effect("la defense baisse+","Baisse la Défense des cibles de 2 Cran")
+vitesse_baisse1 = Effect("la vitesse baisse","Baisse la vitesse du joueur d'un cran")
+vitesse_augment2 = Effect("la vitesse augment+","Augmente la vitesse du joueur de 2 cran",None,"self")
+defense_augment1 = Effect("la defense augment","Augment la Défense des cibles d'un Cran",None,"self")
+defensespe_augment2 = Effect("la defensespe augment+","Augment la Défense des cibles de 2 Cran",sure,"self")
+defensespe_baisse1_1sur10 = Effect("la defensespe baisse","Baisse la DéfenseSPE des cibles d'un Cran",pourcent1sur10)
+
+
+Brule1sur10 = Effect("bruler","le Joueur ayant ce statu perds 1 / 16 de ces pv complet",pourcent1sur3,random.randint(5,7)) 
+parylyse1sur10=Effect("paralyse","Des coup jus qui paralyse Le joueur",pourcent1sur10,random.randint(5,7))
+parylyse1sur3=Effect("paralyse","Des coup jus qui paralyse Le joueur",pourcent1sur10,random.randint(5,7))
+PrisonFeux = Effect("bruler","Il piegier dans dans des flammes",sure,5)
+Priority = Effect("First","à la priorité donc comence en premier")
+Peur1sur3 = Effect("Peur","30%¨de chance que l\'adversaire ne fasse rien",pourcent1sur3)
+# Gain = Effect("Argent","L'argent gagné suit la formule : 5 * Niveau du lanceur * Nombre de Jackpot utilisés",None,None,"self") USELESS
+repeat = Effect("Repeat","Le joueur re utilise son attaque",None,random.randint(2,5))
+Infecter = Effect("Infecter","1/8 des PV max de la cible sont drainés pour le lanceur à la fin de chaque tour jusqu'à que la cible soit retirée du terrain. N'affecte pas les Pokémon Plante. La Grosse Racine augmente les PV restaurés de 30%.",)
+Dodo = Effect("Someil","Le joueur est endormie il ne peut pas joueur",None,random.randint(1,7))
+Poison = Effect("Empoisoner","le Joueur est empoisonne il perd 1 16iem de ces pv",sure,None,random.randint(6,8))
+Gel1sur10 = Effect("Gel","Le joueur est geler il ne peut pas joueur",pourcent1sur10,random.randint(1,7))
+parylyse = Effect("paralyse","Un faible choc électrique frappe l'ennemi. Si l'attaque le touche, celui-ci est paralysé.",sure,random.randint(5,7))
+NeutreState = Effect("Neutre","Une brume blanche enveloppe l'équipe du lanceur et empêche la réduction des stats par les autres Pokémon durant 5 tours.",None,5,"self")
+Confus1sur10 =  Effect("Confusion","Un rayon sinistre qui plonge l'ennemi dans un état de confusion.",sure,5)
+Confus =  Effect("Confusion","Un rayon sinistre qui plonge l'ennemi dans un état de confusion.",pourcent1sur10,5)
+Contrecoup = Effect("Contre coup","Le joueur se blesse en fesant cette attaque","self")
+Poison1sur4 = Effect("Empoisoner","le Joueur est empoisonne il perd 1 16iem de ces pv",pourcent1sur4,random.randint(6,8))
+Poison1sur3 = Effect("Empoisoner","le Joueur est empoisonne il perd 1 16iem de ces pv",pourcent1sur3,random.randint(6,8))
+AutoDestrucion= Effect("AUTO KO","Le pokemon se tue lui meme",None,None,"self")
+precision_baisse1 = Effect("la Precision baisse","baisse la precision du joueur d'un' cran",None,"self")
+#CREATION attaque
 charge = Mouv("charge","Normal",0,100,35,50,None,"Le lanceur charge l'ennemi et le percute de tout son poids.")
-flameche = Mouv("Flammèche","Feu",1,100,25,40,Brule1sur10,"L'ennemi est attaqué par une faible flamme. Peut aussi le brûler. (proba : 1 sur 10 l'attaque dur entre 5 et 7 tour)",None)
+Vive_attaque=Mouv("Vive-attaque","Normal",0,100,30,40,Priority,"Le lanceur fonce sur l'ennemi si rapidement qu'on parvient à peine à le discerner. Frappe en priorité.")
 Griffe = Mouv("Griffe","Normal",0,100,35,40,None,"Lacère l'ennemi avec des griffes acérées pour lui infliger des dégâts.")
+rugissement = Mouv("rugissement","Normal",2,100,40,None,attaque_baisse1,"Le lanceur pousse un cri tout mimi pour tromper la vigilance de l'ennemi et baisser son Attaque.")
+flameche = Mouv("Flammèche","Feu",1,100,25,40,Brule1sur10,"L'ennemi est attaqué par une faible flamme. Peut aussi le brûler. (proba : 1 sur 10 l'attaque dur entre 5 et 7 tour)",None)
+GrozYeux = Mouv("Groz'Yeux","Normal",2,100,30,None,defense_baisse1,"Le lanceur fait les gros yeux à l'ennemi pour l'intimider et baisser sa Défense.")
+MimiQueue = Mouv("Mimi-Queue","Normal",2,100,30,None,defense_baisse1,"Le lanceur remue son adorable queue pour tromper la vigilance de l'ennemi et baisser sa Défense.")
+Tranche = Mouv("Tranche","Normal",0,100,20,70,None,"Un coup de griffe ou autre tranche l'ennemi. Taux de critiques élevé.",None,1)
+LanceFlammes = Mouv("Lance-Flammes","Feu",1,100,15,90,Brule1sur10,"L'ennemi reçoit un torrent de flammes. Peut aussi le brûler.")
+CombotGriffe = Mouv("Combo-Griffe","Normal",0,80,15,18,repeat,"L'ennemi est lacéré par des faux ou des griffes de deux à cinq fois d'affilée.")
+Jackpot  = Mouv("Jackpot","Normal",0,100,20,40,None,"Des pièces sont lancées sur l'ennemi. Permet d'obtenir de l'argent à la fin du combat.")
+Vampigraine = Mouv("Vampigraine","Plante",2,90,10,None,Infecter,"Une graine est semée sur l'ennemi. À chaque tour, elle lui dérobe des PV que le lanceur récupère.")
+TrancheHerbe = Mouv("Tranch'Herbe","Plante",0,95,25,55,None,"Des feuilles aiguisées comme des rasoirs entaillent l'ennemi. Taux de critiques élevé.",None,1)
+PoudreDodo = Mouv("Poudre Dodo","Plante",2,75,15,None,Dodo,"Le lanceur répand une poudre soporifique qui endort la cible.")
+PoudreToxique = Mouv("Poudre Toxik","Poison",2,75,35,None,Poison,"Une poudre toxique empoisonne l'ennemi.")
+Eclair = Mouv("Éclair","Électrik",1,100,30,40,parylyse1sur10,"Une décharge électrique tombe sur l'ennemi. Peut aussi le paralyser.")
+CageEclaire = Mouv("Cage Éclair","Électrik",2,90,20,None)
+Meteor = Mouv("Météores","Normal",1,100,20,60,None,"Le lanceur envoie des rayons d'étoiles. Touche toujours l'ennemi.")
+hate = Mouv("Hâte","Psy",2,1000,30,None,vitesse_augment2,"Le lanceur se relaxe et allège son corps pour beaucoup augmenter sa Vitesse.","self")
+FatalFoudre=Mouv("Fatal-Foudre","Électrik",1,70,10,110,parylyse1sur3,"La foudre tombe sur l'ennemi pour lui infliger des dégâts. Peut aussi le paralyser.")
+Ecume = Mouv("Écume","Eau",1,100,30,40,vitesse_baisse1,"Une attaque de bulles pouvant baisser la Vitesse.")
+PistoletO = Mouv("Pistolet à O","Eau",1,100,25,40,None,"De l'eau est projetée avec force sur l'ennemi.")
+Morsure = Mouv("Morsure","Normal",0,100,25,60,Peur1sur3,"L'ennemi est mordu par de tranchantes canines. Peut l'apeurer.")
+Repli = Mouv("Repli","Eau",2,1000,40,None,defense_augment1,"Le lanceur se recroqueville dans sa carapace, ce qui augmente sa Défense.","self")
+CoudKrane = Mouv("Coud'Krâne","Normal",0,100,10,130,defense_augment1,"Le lanceur baisse la tête pour augmenter sa Défense au premier tour et percuter l'ennemi au second.")
+HydroCanon = Mouv("Hydrocanon ","Eau",1,80,5,110,None,"Un puissant jet d'eau est dirigé sur l'ennemi.")
+Berceuse = Mouv("Berceuse","Normal",2,55,15,None,Dodo,"Une berceuse plonge l'ennemi dans un profond sommeil.")
+Brume = Mouv('Brume',"Glace",2,1000000,30,None,NeutreState,"Une brume blanche enveloppe l'équipe du lanceur et empêche la réduction des stats par les autres Pokémon durant 5 tours.","self")
+Plaquage = Mouv("Plaquage","Normal",0,100,15,85,parylyse1sur3,"Le lanceur se laisse tomber sur l'ennemi de tout son poids. Peut aussi le paralyser.")
+OndeFolie = Mouv("Onde Folie","Spectre",2,100,10,None,Confus,"Un rayon sinistre qui plonge l'ennemi dans un état de confusion.")
+LaserGlace= Mouv("Laser Glace","Glace",1,100,10,90,Gel1sur10,"Un rayon de glace frappe l'ennemi. Peut aussi le geler.")
+PoingKarate = Mouv('Poing Karaté',"Combat",0,100,25,50,None,"Une attaque tranchante à taux de critiques élevé.",None,1)
+FrappeAtlas=Mouv("Frappe Atlas","Combat",0,100,20,1,None,"L\'ennemi est projeté grâce au pouvoir de la gravité. Inflige des dégâts équivalents au niveau du lanceur.")
+Puissance = Mouv("Puissance","Normal",2,10000,30,None,None,"Le lanceur prend une profonde inspiration et se concentre pour augmenter son taux de critiques.","self",2)
+Sacrifice = Mouv("Sacrifice","Combat",0,80,20,80,Contrecoup,"Le lanceur agrippe l'ennemi et l'écrase au sol. Blesse aussi légèrement le lanceur.")
+Puredpois = Mouv("Purédpois","Poison",1,70,20,30,"Le lanceur attaque à l'aide d'une éruption de gaz répugnants. Peut aussi empoisonner l'ennemi.")
+Detritus = Mouv("Détritus","Poison",1,100,20,65,Poison1sur3,"Des détritus toxiques sont projetés sur l'ennemi. Peut aussi l'empoisonner.")
+Destruction = Mouv("Destruction","Normal",0,100,5,200,AutoDestrucion,"Le lanceur explose en blessant tous les Pokémon autour de lui. Le lanceur tombe K.O.")
+Explosion = Mouv("Explosion","Normal",0,100,5,250,AutoDestrucion,"Le lanceur explose en blessant tous les Pokémon autour de lui. Le lanceur tombe K.O.")
+Jetsable = Mouv("Jet de Sable","Sol",2,100,15,None,precision_baisse1,"Lance du sable au visage de l'ennemi pour baisser sa Précision.")
+Seisme = Mouv("Séisme","Sol",0,100,10,100,None,"Le lanceur provoque un tremblement de terre touchant tous les Pokémon autour de lui.")
+Tornade = Mouv("Tornade","Vol",1,100,35,40,None,"Peut toucher un Pokémon utilisant Rebond, Vol ou Chute Libre et double de puissance.")
+CruAile = Mouv("Cru-Ailes","Vol",0,100,35,60,None,"L'ennemi est frappé par de larges ailes déployées pour infliger des dégâts.")
+Chocmental = Mouv("Choc Mental","Psy",1,100,25,50,Confus1sur10,"Une faible vague télékinétique frappe l'ennemi. Peut aussi le plonger dans la confusion.")
+CoupdBoule = Mouv("Coup d'Boule","Normal",0,100,15,70,Peur1sur3,"zidane")
+Amnesie = Mouv("Amnésie","Psy",2,100000,20,None,defensespe_augment2,"Le lanceur fait le vide dans son esprit pour oublier ses soucis. Augmente beaucoup sa Défense Spéciale.")
+Psyko = Mouv("Psyko","Psy",1,100,10,90,defensespe_baisse1_1sur10,"Une puissante force télékinétique frappe l'ennemi. Peut aussi faire baisser sa Défense Spéciale.")
+Secretation = Mouv("Sécrétion","Insect",2,95,40,None,vitesse_baisse1,"Le lanceur crache de la soie pour ligoter l'ennemi et beaucoup baisser sa Vitesse.")
+JetPierre = Mouv("Jet-Pierres","Roche",0,90,15,50,None,"Le lanceur lâche une pierre sur l'ennemi.")
+
+#faire Ecume
 # charge.afficher_element()

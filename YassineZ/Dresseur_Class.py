@@ -104,7 +104,36 @@ class Joueur(Dresseur):
         self.PC_DU_JOUEUR = []  # la ou iront tout le surplus de pokèmon qui ne poura pas etre dans son équipe
         self.avant = "" #Pour le deplacement
         super().__init__(name, team,Fore.WHITE+'H'+Style.RESET_ALL)# il sera en H pour Hero
-    
+
+    def affichage_Team(self):
+        for i in range(6):
+            if len(self.team) >i :
+                print("ID.",i+1," ",self.team[i].name,end=" - ")
+                if self.team[i].HP<=0:
+                    print(Fore.LIGHTRED_EX+"K.O"+Style.RESET_ALL)
+                else:
+                    print(Fore.GREEN+str(round(self.team[i].HP*100/self.team[i].HP_full))+"%"+Style.RESET_ALL)
+            else:
+                print("ID.",i," RIEN")
+
+    def Selector_Info_Pokemon(self):
+        while True:
+            clear()
+            try:
+                self.affichage_Team()
+                choix_Pokemon = int(input("Quel Pokemon slectioner (0 pour retourner en arriere): "))
+                if choix_Pokemon == 0:
+                    return 0,None
+                elif choix_Pokemon >0 and choix_Pokemon<= len(self.team):
+                    print("\nTu as choisi ",self.team[choix_Pokemon-1].name,"\n")
+                    choix = input("Appuie sur \'S\' pour choisir ce pokemon ou nimporte quoi dautre pour avoire des info sur ce pokemon : ")
+                    if choix=="S":
+                        return choix_Pokemon,self.team[choix_Pokemon-1]
+                    else:
+                        self.team[choix_Pokemon-1].Info_Pokemon()
+                
+            except ValueError:
+                clear()
     #------------------------------------------------------------------
     def afficher_PC(self):
         """

@@ -1,3 +1,4 @@
+from tkinter import N
 import colorama
 from colorama import Fore
 from colorama import Style
@@ -107,15 +108,17 @@ Liste_de_Cran = [2/8,2/7,2/6,2/5,2/4,2/3,2/2,3/2,4/2,5/2,6/2,7/2,8/2]
 Liste_de_Cran_Esquive_Precision = [3/9,3/8,3/7,3/6,3/5,3/4,3/3,4/3,5/3,6/3,7/3,8/3,9/3]
 
 Liste_de_Pokemon = []
-#definir un pokemon il est composé de quoi comme variable 
+#definir un pokemon il est composé de quoi comme variable #Next_Evolution est un tupler un chifre et Pokemon
 class Pokemon:
-    def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture) :
+    def __init__(self,name,Type,competence,sauvage,State_Base_HP,State_Base_Attack,State_Base_Def,State_Base_AttackSPE,State_Base_DefSPE,State_Base_Speed,Taux_De_Capture,New_ability,Next_Evolution) :
+        self.Next_Evolution = Next_Evolution
         self.name = name                #str, nom du pokemon le Joueur peut nommer son pokemon mais il ne peut pas changer ....
         self.Espece = name              #...l'espece du Pokemon fix qui est fixe 
         self.Type= Type                 #peut avoir 2 ou 1 type [str]
         self.competence= competence        #peut entre 1 et avoir max 4 Mouv et chaque Mouv à un nombre de pp et un type [ataque]
         self.Level = 1
         self.Exp=0
+        self.NewAbility = New_ability
 #Racine des state
         self.State_Base_HP=State_Base_HP
         self.State_Base_Attack=State_Base_Attack
@@ -161,7 +164,9 @@ class Pokemon:
         self.Cran_Esquive = 0
         self.Cran_Precision = 0
 #fin
+        self.canAttack = True
         self.statu = None
+        self.PetitStatu = []
         self.Taux_De_Capture = Taux_De_Capture
         self.Esquive = 100
         self.Precision = 100
@@ -179,6 +184,21 @@ class Pokemon:
             "statu":self.statu,"Taux De Capture":self.Taux_De_Capture,"Esquive":self.Esquive,"Precision":self.Precision,"dialogue":self.dialogue,"sauvage":self.sauvage
         }
     
+        
+    def agir(self,Competence,Cible):
+        r = True
+        for i in self.PetitStatu:
+            if i.name=="Peur":
+                r = i.update_entity(self)
+        if self.statu != None:
+            if self.statu.name == "paralyse":
+                return self.statu.update_entity(self)
+        if Competence.toucher(self,Cible) and self.canAttack and r :
+            return True
+        else:
+            print("il a rater sont attaque")
+            return False
+
     def Info_Pokemon(self):
         a= asscie[random.randint(1,len(asscie))-1]
         print("INFO DU POKEMON ",self.name," : ")
@@ -213,7 +233,7 @@ class Pokemon:
                     print("    -Nom d'effect : ",self.competence[i].Effect.name)
                     print("    -description effect : ",self.competence[i].Effect.description)
                 print()
-        sleep(10)
+        input()
         
 
 
@@ -308,6 +328,7 @@ class Pokemon:
             print("Votre Pokemon Monte de Niveau Felicitation ces state augmente de ",a," --> ",a+1," Niveau")
             self.Level += 1
             self.EV_Make()
+            self.apprendre_competence()
             self.update()
             if self.Level==100 :
                 self.Level=100
@@ -377,9 +398,10 @@ class Pokemon:
             self.All_Variable["EV Speed"] = self.EV_Speed
 
     def Make_Level(self,Level):
-        for _ in range(self.Level-Level):
+        for _ in range(Level-self.Level):
             self.EV_Make()
         self.Level = Level
+        self.apprendre_competence()
         self.All_Variable["Level"] = self.Level
         self.update()
     
@@ -459,14 +481,30 @@ class Pokemon:
         self.All_Variable["DefenseSPE"] = self.DefenseSPE
         self.All_Variable["Speed"] = self.Speed
     
-    def Fin_de_Combat(self):
-        self.Cran_Attack = 0
-        self.Cran_AttackSPE = 0
-        self.Cran_Defense = 0
-        self.Cran_DefenseSPE = 0
-        self.Cran_Esquive = 0
-        self.Cran_Precision = 0
-        self.Cran_Speed = 0
+    def Fin_de_Combat(self,option=None):
+        if option != None:
+            if self.Cran_Attack < 0:
+                self.Cran_Attack = 0
+            if self.Cran_AttackSPE < 0:
+                self.Cran_AttackSPE = 0
+            if self.Cran_Defense < 0:
+                self.Cran_Defense = 0
+            if self.Cran_DefenseSPE < 0:
+                self.Cran_DefenseSPE = 0
+            if self.Cran_Esquive < 0:
+                self.Cran_Esquive = 0   
+            if self.Cran_Precision < 0:
+                self.Cran_Precision = 0   
+            if self.Cran_Speed < 0:
+                self.Cran_Speed = 0    
+        else:
+            self.Cran_Attack = 0
+            self.Cran_AttackSPE = 0
+            self.Cran_Defense = 0
+            self.Cran_DefenseSPE = 0
+            self.Cran_Esquive = 0
+            self.Cran_Precision = 0
+            self.Cran_Speed = 0
         #####################################
         self.Attack = self.Attack_full * Liste_de_Cran[self.Cran_Attack+6]
         self.AttackSPE =self.AttackSPE_full * Liste_de_Cran[self.Cran_AttackSPE+6]
@@ -483,6 +521,10 @@ class Pokemon:
         self.All_Variable["DefenseSPE"] = self.DefenseSPE
         self.All_Variable["Speed"] = self.Speed
         self.All_Variable["statu"] = self.statu
+        ###################################################"""""""""""""""""""
+        if option == None:
+            for i in self.competence:
+                i.BonusCritique = False
 #######################################################################"
     def Barre_HP(self):
         Barre = ""
@@ -528,9 +570,33 @@ class Pokemon:
         a.IV_Make()
         return a
 
-            
-# Pikachu = Pokemon("Pikachu",["Électrik"],[Mouv_Class.charge],False,35,55,40,50,50,90,255)#A remplir
-# print(str(type(Pikachu))== "<class '__main__.Pokemon'>")
+    def apprendre_competence(self):
+        for i in range(self.Level):
+            if has_key(self.NewAbility,i):
+                if len(self.competence) <4:
+                    self.competence.append(self.NewAbility[i])
+                    del self.NewAbility[i]
+                else:
+                    c= random.randint(0,4)
+                    if c!=4:
+                        self.competence[c] = self.NewAbility[i]
+                        del self.NewAbility[i]
+                    else:
+                        del self.NewAbility[i]
+
+def has_key(Dic,key):
+    for i in Dic.keys():
+        if i == key:
+            return True
+    return False
+
+
+###################CREATION POKEMON
+
+Salameche = Pokemon("Salameche",["Feu"],[],True,39,52,43,60,50,65,45,)
+
+
+Pikachu = Pokemon("Pikachu",["Électrik"],[],True,35,55,40,50,50,90,190,{0:Mouv_Class.rugissement,1:Mouv_Class.charge,3:Mouv_Class.flameche,4:Mouv_Class.Griffe,5:Mouv_Class.Vive_attaque})# print(str(type(Pikachu))== "<class '__main__.Pokemon'>")
 
 ######################" TEST IV "
 # Pikachu.afficher_state()
@@ -559,6 +625,17 @@ class Pokemon:
 # Pikachu.afficher_state()
 # Pikachu.statu.update_entity(Pikachu)
 # Pikachu.afficher_state()
+##################################################################"VERIFICATION D4APRENTISSAGE DES NOUVELLE COMPETENCE"
+# print(Pikachu.Level)
+# for i in Pikachu.competence:
+#     print(" : ",i.name)
+# print("\n")
+# Pikachu.gain_Exp(100)#faire une fonction qui fait la monter des Niveau
+
+# Pikachu.Make_Level(6)
+# print(Pikachu.Level)
+# for i in Pikachu.competence:
+#     print(" : ",i.name)
 ##################################"" Afficher all pokemon
 #crée une liste avec plein plein de pokémon#
 def afficher_Liste_Pokemon():

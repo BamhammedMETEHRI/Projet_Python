@@ -1,8 +1,14 @@
 import Dresseur_Class, map_Class
+import random
+import Combat
 from colorama import Fore
 from colorama import Style
 
 ###################### creation de biome
+def Aparition_Pokemon_sauvage ():
+    if random.randint(1,4)==1:
+
+
 Herbe_All = map_Class.biome(Fore.GREEN+"~"+Style.RESET_ALL,"Taux d'apparition de tout les pokèmons égaux")
 FIN = map_Class.biome("F","FIN du Jeux Merci D'avoir Jouer :) ")
 Joel = Dresseur_Class.PNJ_Soigneur_Marchand("Joel",[])
