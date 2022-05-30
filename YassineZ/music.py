@@ -29,11 +29,11 @@ route00 = "music\port_pokemon.wav"
 route01 = "music\\route_228.wav"
 Prof = "music\\Professor.wav"
 a =None
-# a =mettre_music(generique,a)
-# sleep(1)
-# a =mettre_music(combat_dresseur,a)
-# sleep(1)
-# a=mettre_music(combat_pokemon,a)
+a =mettre_music(generique,a)
+input()
+a =mettre_music(combat_dresseur,a)
+input()
+a=mettre_music(combat_pokemon,a)
 # sleep(1)
 # a=mettre_music(route00,a)
 # sleep(1)

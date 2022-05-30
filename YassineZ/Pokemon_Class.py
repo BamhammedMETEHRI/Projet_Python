@@ -196,9 +196,12 @@ class Pokemon:
             if self.statu.name == "paralyse":
                 return self.statu.update_entity(self)
         if Competence.toucher(self,Cible) and self.canAttack and r :
+            print("il reussi son attaque")
+            sleep(4)
             return True
         else:
             print("il a rater sont attaque")
+            sleep(4)
             return False
 
     def Info_Pokemon(self):
@@ -331,6 +334,7 @@ class Pokemon:
             self.Level += 1
             self.EV_Make()
             self.apprendre_competence()
+            self.Evolution()
             self.update()
             if self.Level==100 :
                 self.Level=100
@@ -403,6 +407,7 @@ class Pokemon:
         for _ in range(Level-self.Level):
             self.EV_Make()
         self.Level = Level
+        self.Evolution()
         self.apprendre_competence()
         self.All_Variable["Level"] = self.Level
         self.update()
@@ -570,6 +575,7 @@ class Pokemon:
     def New_Pokemon_same_espece(self):
         a=Pokemon(self.name,self.Type,self.competence,self.sauvage,self.HP,self.Attack,self.Defense,self.AttackSPE,self.DefenseSPE,self.Speed,self.Taux_De_Capture)
         a.IV_Make()
+        Liste_de_Pokemon.pop(len(Liste_de_Pokemon)-1)
         return a
 
     def apprendre_competence(self):
@@ -578,18 +584,25 @@ class Pokemon:
         for i in range(self.Level):
             if has_key(self.NewAbility,i):
                 if len(self.competence) <4:
+                    print(self.name," Apprend ",self.NewAbility[i].name)
+                    sleep(2)
                     self.competence.append(self.NewAbility[i])
                     del self.NewAbility[i]
                 else:
                     c= random.randint(0,4)
                     if c!=4:
+                        print(self.name," apprend ",self.NewAbility[i].name,"\net le remplace par ",self.competence[c].name)
+                        sleep(2)
                         self.competence[c] = self.NewAbility[i]
                         del self.NewAbility[i]
                     else:
+                        print(self.name," n'aprend pas ",self.NewAbility[i].name)
                         del self.NewAbility[i]
     def Evolution(self):
         if self.Next_Evolution != None:
             if self.Level>=self.Next_Evolution[0]:
+                print(self.Espece," EVOLUE EN ",self.Next_Evolution[1].Espece)
+                sleep(3)
                 if self.name ==self.Espece:
                     self.name = self.Next_Evolution[1].name
                 self.Espece = self.Next_Evolution[1].Espece
@@ -706,6 +719,18 @@ Fantominus=Pokemon("Fantominus",["Spectre","Poison"],[Mouv_Class.Lechouille.Newa
 # Pikachu.afficher_state()
 # Pikachu.statu.update_entity(Pikachu)
 # Pikachu.afficher_state()
+############################################################################## Verifier si le pokemon Evolue
+# print(Pikachu.Level)
+# for i in Pikachu.competence:
+#     print(" : ",i.name)
+# print("\n")
+# Pikachu.gain_Exp(10000)#faire une fonction qui fait la monter des Niveau
+
+# Pikachu.Make_Level(6)
+# print(Pikachu.Level)
+# for i in Pikachu.competence:
+#     print(" : ",i.name)
+
 ##################################################################"VERIFICATION D4APRENTISSAGE DES NOUVELLE COMPETENCE"
 # print(Pikachu.Level)
 # for i in Pikachu.competence:
@@ -725,4 +750,7 @@ def afficher_Liste_Pokemon():
 #afficher_Liste_Pokemon()
 # print()
 # Aficher_Matrice_Des_Type()
+def Selection_Random_PK():
+    return Liste_de_Pokemon[random.randint(0,len(Liste_de_Pokemon)-1)].New_Pokemon_same_espece()
+
 

@@ -10,7 +10,8 @@ mur= biome(Fore.BLACK+"#"+Style.RESET_ALL,"Stop")
 rien = biome(" ")
 
 class Map:
-    def __init__(self,Longuer,Largeur):
+    def __init__(self,Longuer,Largeur,NextMap=None):
+        self.NextMap = NextMap
         self.town =[]
         for i in range(Largeur+2):
             l=[]
@@ -58,5 +59,10 @@ class Map:
             Dresseur.AxeX=X
             if str(type(Dresseur)) == "<class 'Dresseur_Class.PNJ_Adverse'>":
                 self.List_of_Adversaire.append(Dresseur)
+    def del_Dresseur(self,Dresseur):
+            self.town[Dresseur.AxeY][Dresseur.AxeX] = Dresseur.avant
+            Dresseur.avant= None
+            Dresseur.AxeY=None
+            Dresseur.AxeX=None
 
 

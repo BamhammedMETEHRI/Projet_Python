@@ -7,14 +7,14 @@ Au niveau maps :
 - déplacement | OK
 - gestion des collisions | OK
 - sortir / entrer bâtiment | -
-- rencontres dans les hautes herbes  | -
+- rencontres dans les hautes herbes  | ok
 
 Au niveau combats :
-- lancer une attaque | -
-- infliger des dégats (physique et spécial) | -
-- modifier les stats | -
-- switcher  | -
-- fuir | -
+- lancer une attaque | ok
+- infliger des dégats (physique et spécial) | ok
+- modifier les stats | ok
+- switcher  | ok
+- fuir | ok
 
 
 Au niveau menus :
@@ -27,5 +27,5 @@ Au niveau menus :
 Au niveau des pokémons :
 - Gagner de l'exp | ok
 - Monter de niveau | ok
-- Apprendre des attaques | -
-- Évoluer | -
+- Apprendre des attaques | ok
+- Évoluer | ok

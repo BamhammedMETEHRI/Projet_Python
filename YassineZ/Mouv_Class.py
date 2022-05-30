@@ -224,7 +224,7 @@ class Mouv:
         Degat = (Degat +2) * CM
         print(adversaire.name," perd environs",(Degat*100)//adversaire.HP_full,"% PV")
         sleep(1)
-        if self.Effect.target == "self":
+        if self.Effect != None and self.Effect.target == "self":
             self.Effect.update_entity(equipier)
         if self.Effect != None and adversaire.statu == None:
             self.Effect.update_entity(adversaire)
@@ -508,14 +508,17 @@ charge = Mouv("charge","Normal",0,100,35,50,None,"Le lanceur charge l'ennemi et 
 Vive_attaque=Mouv("Vive-attaque","Normal",0,100,30,40,Priority,"Le lanceur fonce sur l'ennemi si rapidement qu'on parvient à peine à le discerner. Frappe en priorité.")
 Griffe = Mouv("Griffe","Normal",0,100,35,40,None,"Lacère l'ennemi avec des griffes acérées pour lui infliger des dégâts.")
 rugissement = Mouv("rugissement","Normal",2,100,40,None,attaque_baisse1,"Le lanceur pousse un cri tout mimi pour tromper la vigilance de l'ennemi et baisser son Attaque.")
+
 flameche = Mouv("Flammèche","Feu",1,100,25,40,Brule1sur10,"L'ennemi est attaqué par une faible flamme. Peut aussi le brûler. (proba : 1 sur 10 l'attaque dur entre 5 et 7 tour)",None)
 GrozYeux = Mouv("Groz'Yeux","Normal",2,100,30,None,defense_baisse1,"Le lanceur fait les gros yeux à l'ennemi pour l'intimider et baisser sa Défense.")
 MimiQueue = Mouv("Mimi-Queue","Normal",2,100,30,None,defense_baisse1,"Le lanceur remue son adorable queue pour tromper la vigilance de l'ennemi et baisser sa Défense.")
 Tranche = Mouv("Tranche","Normal",0,100,20,70,None,"Un coup de griffe ou autre tranche l'ennemi. Taux de critiques élevé.",None,1)
+
 LanceFlammes = Mouv("Lance-Flammes","Feu",1,100,15,90,Brule1sur10,"L'ennemi reçoit un torrent de flammes. Peut aussi le brûler.")
 CombotGriffe = Mouv("Combo-Griffe","Normal",0,80,15,18,repeat,"L'ennemi est lacéré par des faux ou des griffes de deux à cinq fois d'affilée.")
 Jackpot  = Mouv("Jackpot","Normal",0,100,20,40,None,"Des pièces sont lancées sur l'ennemi. Permet d'obtenir de l'argent à la fin du combat.")
 Vampigraine = Mouv("Vampigraine","Plante",2,90,10,None,Infecter,"Une graine est semée sur l'ennemi. À chaque tour, elle lui dérobe des PV que le lanceur récupère.")
+
 TrancheHerbe = Mouv("Tranch'Herbe","Plante",0,95,25,55,None,"Des feuilles aiguisées comme des rasoirs entaillent l'ennemi. Taux de critiques élevé.",None,1)
 PoudreDodo = Mouv("Poudre Dodo","Plante",2,75,15,None,Dodo,"Le lanceur répand une poudre soporifique qui endort la cible.")
 PoudreToxique = Mouv("Poudre Toxik","Poison",2,75,35,None,Poison,"Une poudre toxique empoisonne l'ennemi.")

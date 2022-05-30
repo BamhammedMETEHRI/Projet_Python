@@ -13,8 +13,8 @@ import random
 from time import sleep
 from colorama import Fore
 from colorama import Style
-import Dresseur_Class, Pokemon_Class,map_Class,Mouv_Class,Item_Class
-from YassineZ.Mouv_Class import Mouv
+import Dresseur_Class
+import Pokemon_Class,map_Class,Mouv_Class,Item_Class
 
 def clear():
   
@@ -57,15 +57,18 @@ CAPTURE_SUCCES="\n                \n            \n    _M____M_       * *\n   /²
 ######################################################################################################################
 
 # ☐ ■
-PKSauvage = Pokemon_Class.Liste_de_Pokemon[random.randint(0,len(Pokemon_Class.Liste_de_Pokemon)-1)].New_Pokemon_same_espece()
-PKSauvage.competence=[Mouv_Class.charge]
-Salameche_du_Joueur = Pokemon_Class.Salameche.New_Pokemon_same_espece()
-Salameche_du_Joueur.competence= [Mouv_Class.charge,Mouv_Class.Vive_attaque,Mouv_Class.Griffe,Mouv_Class.rugissement]
-Salameche_du_Joueur.sauvage = False
-moi = Dresseur_Class.Joueur("Yassine",[Salameche_du_Joueur])
-moi.inventaire.append(Item_Class.potion_normal) 
-moi.inventaire.append(Item_Class.pokeball) 
-carte = map_Class.Map(10,10)
+# PKSauvage = Pokemon_Class.Liste_de_Pokemon[random.randint(0,len(Pokemon_Class.Liste_de_Pokemon)-1)].New_Pokemon_same_espece()
+# PKSauvage.competence=[Mouv_Class.charge]
+# monPokemon = Pokemon_Class.Liste_de_Pokemon[random.randint(0,len(Pokemon_Class.Liste_de_Pokemon)-1)].New_Pokemon_same_espece()
+# monPokemon.Speed += 100
+   
+
+# monPokemon.competence=[Mouv_Class.LanceFlammes,Mouv_Class.flameche,Mouv_Class.Jackpot,Mouv_Class.Vampigraine]
+# DresseurAdverse = Dresseur_Class.PNJ_Adverse("bob",[PKSauvage])
+# moi = Dresseur_Class.Joueur("Yassine",[monPokemon])
+# moi.inventaire.append(Item_Class.potion_normal) 
+# moi.inventaire.append(Item_Class.pokeball) 
+# carte = map_Class.Map(10,10)
 
 ############################################################################################################################################################
 def cligniotement(map):
@@ -323,6 +326,7 @@ def Duel(J1,P1,P2,Choix1,Choix2):
         if first.agir(ChoixFirst,second) :
             if ChoixFirst.Effect != None:
                 if ChoixFirst.name == "JACKPOT":
+                    print("Vous gagner de l'argent")
                     J1.money += 5 * first.Level
 
                 if  ChoixFirst.Effect.name == "Repeat" :
@@ -331,7 +335,13 @@ def Duel(J1,P1,P2,Choix1,Choix2):
                         second.HP -= d
                         if second.HP < 0:
                             second.HP = 0
-                            return P1    
+                            return P1
+                else:
+                    d = ChoixFirst.Calcule_Degat(first,second)
+                    second.HP -= d
+                    if second.HP < 0:
+                        second.HP = 0
+                        return P1    
             else:
                 d = ChoixFirst.Calcule_Degat(first,second)
                 second.HP -= d
@@ -362,6 +372,8 @@ def Duel(J1,P1,P2,Choix1,Choix2):
     sleep(3)
     clear()
     Affichage_du_Duel(P1,P2)
+    for k in P1.PetitStatu:
+        k.up
     if P1.statu != None:
         P1.statu.update_entity(P1,P2)
         sleep(3)
@@ -411,19 +423,58 @@ def COMBAT(map,Joueur,Adverser):
             P1.gain_Exp(Adverser.Level)
             print("FIN DU COMBAT")
             for i in Joueur.team:
+                i.PetitStatu= []
                 i.Fin_de_Combat()
             sleep(4)
             clear()
             return "Victoire"
         else:
             clear()
+            for i in Joueur.team:
+                i.PetitStatu= []
+                i.Fin_de_Combat()
             print("FIN un pokemon capturer")
-            """fonction qui montre les state du pokemon"""
-
+            Joueur.ajouter_membre()
+#############################################################################
     else :
+        nbrJoueur = 0
         print("Un Dresseur !! ")
+        while Joueur.Perdu() and Adverser.Perdu():
+            if P1.HP<=0:
+                while P1.HP <= 0:
+                    _,remplacement= Joueur.Selector_Info_Pokemon()
+                    if remplacement != None:
+                        P1 = remplacement
+            if Adverser.team[nbrJoueur].HP<=0:
+                P1.gain_Exp(Adverser.team[nbrJoueur].Level)
+                nbrJoueur +=1
+            ActionJ1 = Joueur_choix(Joueur,Adverser.team[nbrJoueur],P1)
+            if ActionJ1 == 100 :
+                clear()
+                Affichage_du_Duel(P1,P2)
+                print("Tu as Fuis !!!")
+                for i in Joueur.team:
+                    i.Fin_de_Combat()
+                sleep(3)
+                clear()
+                return "Fuite"
+            ActionJ2 = IA_Pokemon_Sauvage(P2)
+            P1 = Duel(Joueur,P1,P2,ActionJ1,ActionJ2)
+        if not(Adverser.Perdu()):
+            clear()
+            print("BRAVO TU AS GAGNER LE DUEL ",Adverser.name," a perdu")
+            P1.gain_Exp(P2.Level)
+            Joueur.AdversaireVaicu += 1
+            Joueur.money += Adverser.money
+            sleep(2)
+            return "VICTOIRE"
+        else:
+            print(Adverser.name," agagner et tu as perdu :(")
+            return "DEFAITE"
 
-COMBAT(carte,moi,PKSauvage)
+# COMBAT(carte,moi,PKSauvage)
+# COMBAT(carte,moi,DresseurAdverse)
+
 #Salameche_du_Joueur.Info_Pokemon()
 #Faire les degat  FAIT
 #aplication d'effet FAIT
